@@ -80,7 +80,7 @@ urlCurVer = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/curVer
 urlUpdHyst = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/updHyst.ini'
 urlPM = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/pm.py'
 urlCM = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/cm.py'
-urlMB = ''
+urlMB = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/mainBot.py'
 
 def init_message_from_user(message): #функция отвечающая за определение и выполнение команд
 	global mode
