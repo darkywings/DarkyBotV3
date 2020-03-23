@@ -309,6 +309,7 @@ def init_message_from_user(message): #функция отвечающая за �
 			print('download "mainBot.py"...')
 			send_message_to_user('Обновляю главный скрипт...')
 			try:
+				os.remove(pathMB)
 				wget.download(urlMB, pathMB)
 			except:
 				print('err')
