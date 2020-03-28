@@ -24,7 +24,7 @@ import wget
 
 print('authorization...')
 group_id = 192784148
-vk_session = vk_api.VkApi(token='ea6aac611a3593e5d0aa74e1bf58ea9a0421203c85bcc1528cd259cb5a287a92cfb2d12f059f349781836') #авторизация как сообщество
+vk_session = vk_api.VkApi(token='96f3e8e636604dcd8760c034827b677d845d35a7f8a32ba2d497b5a4a87ca41297a10447abc2eadb958ee') #авторизация как сообщество
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
 
@@ -32,7 +32,6 @@ print('checking files...')
 
 pmFileExist = 0
 cmFileExist = 0
-
 
 pathCV = os.path.abspath('curVer.ini ')
 pathUH = os.path.abspath('updHyst.ini ')
@@ -310,6 +309,9 @@ def init_message_from_user(message): #функция отвечающая за �
 			send_message_to_user('Обновляю главный скрипт...')
 			try:
 				os.remove(pathMB)
+			except:
+				print('err')
+			try:
 				wget.download(urlMB, pathMB)
 			except:
 				print('err')
