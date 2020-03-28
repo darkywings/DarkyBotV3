@@ -10,7 +10,7 @@ print('Importing [vk_api]...')
 import vk_api
 
 print('Authorization...')
-vk_session = vk_api.VkApi(token='ea6aac611a3593e5d0aa74e1bf58ea9a0421203c85bcc1528cd259cb5a287a92cfb2d12f059f349781836')
+vk_session = vk_api.VkApi(token='96f3e8e636604dcd8760c034827b677d845d35a7f8a32ba2d497b5a4a87ca41297a10447abc2eadb958ee')
 
 print('Importing [VkLongPoll]...')
 print('Importing [VkEventType]...')
@@ -41,6 +41,8 @@ try:
 		updateHystory.close()
 except:
 	print('File "updHyst.ini" not found')
+	
+print('loading functions...')
 
 def send_message_to_user(message):
 	user_id = int(event.user_id)
@@ -52,30 +54,38 @@ def send_message_to_user(message):
 		message=message
 	)
 
+def init_message_from_user(message): #определяет сообщения от пользователя
+	if "Прив" in event.text or "прив" in event.text or "Преет" in event.text or "преет" in event.text or "Ку" in event.text or "ку" in event.text or "Здрасте" in event.text or "здрасте" in event.text or "Здравствуй" in event.text or "здравствуй" in event.text or "Даров" in event.text or "даров" in event.text or "Дороу" in event.text or "дороу" in event.text or "Преть" in event.text or "преть" in event.text or "Прувет" in event.text or "прувет" in event.text or "Здрасть" in event.text or "здрасть" in event.text:
+		print('user:', event.user_id, ':', event.text)
+		send_message_to_user('Преть')
+	elif "расскажи о себе" in event.text or "Расскажи о себе" in event.text:
+		print('user:', event.user_id, ':', event.text)
+		if cvExist == 1:
+			with open(pathCV) as fileCV:
+				curVer = fileCV.read()
+			send_message_to_user(curVer)
+		else:
+			send_message_to_user('К сожалению мне не удалось найти файл с помощью которого я бы с радостью рассказала вам о себе')
+	elif "История обновлений" in event.text or "история обновлений" in event.text:
+		print('user:', event.user_id, ':', event.text)
+		if uhExist == 1:
+			with open(pathUH) as fileUH:
+				updHyst = fileUH.read()
+			send_message_to_user(updHyst)
+		else:
+			send_message_to_user('К сожалению мне не удалось найти файл в котором содержалась история обновлений')
+	elif "Помощь" in event.text or "помощь" in event.text:
+		print('user:', event.user_id, ':', event.text)
+		send_message_to_user('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Команды"')
+	elif "Команды" in event.text or "команды" in event.text:
+		print('user:', event.user_id, ':', event.text)
+		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь')
+	elif "Дарки" in event.text:
+		print('user:', event.user_id, ':', event.text)
+		send_message_to_user('Я к вашим услугам')
+
 print('Done')
 
 for event in longpoll.listen():
-	if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-   #Слушаем longpoll, если пришло сообщение то:			
-		if event.text == 'Дарки, расскажи о себе' or event.text == 'Дарки расскажи о себе': #Если написали заданную фразу
-			if event.from_user: #Если написали в ЛС
-				if cvExist == 1:
-					with open(pathCV) as fileCV:
-						curVer = fileCV.read()
-					send_message_to_user(curVer)
-				else:
-					send_message_to_user('К сожалению мне не удалось найти файл с помощью которого я бы с радостью рассказала вам о себе')
-		elif event.text == 'Привет, Дарки' or event.text == 'Преет, Дарки' or event.text == 'Привет Дарки' or event.text == 'Преет Дарки' or event.text == 'Прувет Дарки' or event.text == 'Прувет, Дарки' or event.text == 'Здрасть, Дарки' or event.text == 'Здрасть Дарки' or event.text == 'Здравствуй Дарки' or event.text == 'Здрастете Дарки' or event.text == 'Здравствуй, Дарки' or event.text == 'Здрастете, Дарки' or event.text == 'Привки, Дарки' or event.text == 'Привки Дарки' or event.text == 'Ку Дарки' or event.text == 'Ку, Дарки' or event.text == 'Куку Дарки' or event.text == 'Куку, Дарки' or event.text == 'Здравствуйте Дарки' or event.text == 'Здравствуйте, Дарки' or event.text == 'Преть Дарки' or event.text == 'Преть, Дарки':
-			if event.from_user:
-				send_message_to_user('Преть')
-		elif event.text == 'Дарки, история обновлений' or event.text == 'Дарки история обновлений':
-			if event.from_user:
-				if uhExist == 1:
-					with open(pathUH) as fileUH:
-						updHyst = fileUH.read()
-					send_message_to_user(updHyst)
-				else:
-					send_message_to_user('К сожалению мне не удалось найти файл в котором содержалась история обновлений')
-		elif event.text == 'Как дела, Дарки?' or event.text == 'Как делишки, Дарки?' or event.text == 'Как дела Дарки?' or event.text == 'Как делишки Дарки?':
-			if event.from_user:
-				send_message_to_user('У меня не может быть всё плохо пока я работаю :D')
+	if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:#Слушаем longpoll, если пришло сообщение то:			
+		init_message_from_user(event.text)
