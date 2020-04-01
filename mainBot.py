@@ -319,21 +319,36 @@ def init_message_from_user(message): #функция отвечающая за �
 	elif message.startswith('Дарки, обнови главный скрипт') or message.startswith('Дарки обнови главный скрипт'):
 		print('user:', event.user_id, ':', event.text)
 		if event.user_id == 507365405:
-			os.killpg(os.getpgid(pmPID), signal.SIGTERM)
-			os.killpg(os.getpgid(cmPID), signal.SIGTERM)
-			print('download "mainBot.py"...')
-			send_message_to_user('Обновляю главный скрипт...')
-			try:
-				os.remove(pathMB)
-			except:
-				print('err')
-			try:
-				wget.download(urlMB, pathMB)
-			except:
-				print('err')
-				send_message_to_user('Возникла ошибка при загрузке главного скрипта')
-			subprocess.Popen(['python', pathMB])
-			raise SystemExit
+			if mode == 1:
+				os.killpg(os.getpgid(pmPID), signal.SIGTERM)
+				os.killpg(os.getpgid(cmPID), signal.SIGTERM)
+				print('download "mainBot.py"...')
+				send_message_to_user('Обновляю главный скрипт...')
+				try:
+					os.remove(pathMB)
+				except:
+					print('err')
+				try:
+					wget.download(urlMB, pathMB)
+				except:
+					print('err')
+					send_message_to_user('Возникла ошибка при загрузке главного скрипта')
+				subprocess.Popen(['python', pathMB])
+				raise SystemExit
+			if mode == 0:
+				print('download "mainBot.py"...')
+				send_message_to_user('Обновляю главный скрипт...')
+				try:
+					os.remove(pathMB)
+				except:
+					print('err')
+				try:
+					wget.download(urlMB, pathMB)
+				except:
+					print('err')
+					send_message_to_user('Возникла ошибка при загрузке главного скрипта')
+				subprocess.Popen(['python', pathMB])
+				raise SystemExit
 		else:
 			send_message_to_user('В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 
