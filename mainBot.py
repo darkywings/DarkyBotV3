@@ -94,6 +94,7 @@ def init_message_from_user(message): #функция отвечающая за �
 	global pmPID
 	global cmPID
 	if message.startswith('Дарки, запустись') or message.startswith('Дарки запустись'): #команда запуска
+		print('user:', event.user_id, ':', event.text)
 		if event.user_id == 507365405:
 			if mode == 0:
 				mode = mode + 1
@@ -131,6 +132,7 @@ def init_message_from_user(message): #функция отвечающая за �
 			print('accss-err')
 			send_message_to_user('В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message.startswith('Дарки, выключись') or message.startswith('Дарки выключись'): #команда выключения
+		print('user:', event.user_id, ':', event.text)
 		if event.user_id == 507365405:
 			if mode == 1:
 				mode = mode - 1
@@ -148,6 +150,7 @@ def init_message_from_user(message): #функция отвечающая за �
 			print('accss-err')
 			send_message_to_user('В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message.startswith('Дарки, перезапустись') or message.startswith('Дарки перезапустись'):
+		print('user:', event.user_id, ':', event.text)
 		if event.user_id == 507365405:
 			if mode == 1:
 				print('restarting...')
@@ -170,6 +173,7 @@ def init_message_from_user(message): #функция отвечающая за �
 		else:
 			send_message_to_user('В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message.startswith('Дарки, обновись') or message.startswith('Дарки обновись'):
+		print('user:', event.user_id, ':', event.text)
 		if event.user_id == 507365405:
 			if mode == 1:
 				print('updating...')
@@ -280,6 +284,7 @@ def init_message_from_user(message): #функция отвечающая за �
 		else:
 			send_message_to_user('В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message.startswith('Дарки, проверь наличие своих файлов') or message.startswith('Дарки проверь наличие своих файлов'):
+		print('user:', event.user_id, ':', event.text)
 		if event.user_id == 507365405:
 			send_message_to_user('Проверяю...')
 			try:
@@ -312,6 +317,7 @@ def init_message_from_user(message): #функция отвечающая за �
 				send_message_to_user('Файл "updHyst.ini" не найден')
 			send_message_to_user('Проверка завершена')
 	elif message.startswith('Дарки, обнови главный скрипт') or message.startswith('Дарки обнови главный скрипт'):
+		print('user:', event.user_id, ':', event.text)
 		if event.user_id == 507365405:
 			print('download "mainBot.py"...')
 			send_message_to_user('Обновляю главный скрипт...')
