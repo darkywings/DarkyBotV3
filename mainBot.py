@@ -361,5 +361,6 @@ while True:
 		for event in longpoll.listen(): #своеобразное прослушивание новых сообщений
  		   if event.type == VkEventType.MESSAGE_NEW:
   		      init_message_from_user(event.text)
-	except (requests.exceptions.ReadTimeout, socket.timeout):
+	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
+        requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
 		print('<<timeout>>')
