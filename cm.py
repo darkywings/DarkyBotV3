@@ -51,14 +51,15 @@ def send_message_to_chat(message):#функция отвечающая за от
     
 def init_message_from_chat(message):#определение сообщения из беседы
 	if message.startswith('Привет, Дарки') or message.startswith('Преет, Дарки') or message.startswith('Преет Дарки') or message.startswith('Привет Дарки') or message.startswith('Привки, Дарки') or message.startswith('Здрасте, Дарки') or message.startswith('Здравствуй, Дарки') or message.startswith('Здравствуйте, Дарки') or message.startswith('Преть, Дарки') or message.startswith('Привки Дарки') or message.startswith('Здрасте Дарки') or message.startswith('Здравствуй Дарки') or message.startswith('Здравствуйте Дарки') or message.startswith('Преть Дарки') or message.startswith('Здрастете, Дарки') or message.startswith('Здрастете Дарки') or message.startswith('Ку Дарки') or message.startswith('Ку, Дарки') or message.startswith('Куку Дарки') or message.startswith('Куку, Дарки') or message.startswith('Прувет, Дарки') or message.startswith('Прувет Дарки'):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Преть')
-	elif message.startswith('Как дела, Дарки?') or message.startswith('Как дела Дарки?') or message.startswith('Как делишки, Дарки?') or message.startswith('Как делишки Дарки?'):
-		send_message_to_chat('У меня не может быть всё плохо пока я работаю :D')
 	elif message.startswith('Дарки, расскажи о себе') or message.startswith('Дарки расскажи о себе'):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		with open(pathCV) as file:
 			curVer = file.read()
 		send_message_to_chat(curVer)
 	elif message.startswith('Дарки, история обновлений') or message.startswith('Дарки история обновлений'):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		with open(pathUH) as file:
 			updHyst = file.read()
 		send_message_to_chat(updHyst)
