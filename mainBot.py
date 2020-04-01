@@ -338,6 +338,10 @@ def init_message_from_user(message): #функция отвечающая за �
 			send_message_to_user('В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 
 print('done')
-for event in longpoll.listen(): #своеобразное прослушивание новых сообщений
-    if event.type == VkEventType.MESSAGE_NEW:
-        init_message_from_user(event.text)
+while True:
+	try:
+		for event in longpoll.listen(): #своеобразное прослушивание новых сообщений
+ 		   if event.type == VkEventType.MESSAGE_NEW:
+  		      init_message_from_user(event.text)
+	except (requests.exceptions.ReadTimeout, socket.timeout):
+		print('<<timeout>>')
