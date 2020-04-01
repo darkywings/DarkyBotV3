@@ -10,14 +10,17 @@ import os
 print('importing "VkBotLongPoll" and "VkBotEventType"...')
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 
+print('importing "accessToken"...')
+from accessToken import accessToken
+
 print('authorization...')
 group_id = 192784148
-vk_session = vk_api.VkApi(token='96f3e8e636604dcd8760c034827b677d845d35a7f8a32ba2d497b5a4a87ca41297a10447abc2eadb958ee')
+vk_session = vk_api.VkApi(token=accessToken)
 botlongpoll = VkBotLongPoll(vk_session, group_id)
 vk = vk_session.get_api()
 
 #pathCV = os.path.abspath('curVer.ini ')
-pathCV = '/storage/emulated/0/DarkyBot/curVer.ini'
+pathCV = '/storage/sdcard0/DarkyBot/curVer.ini'
 try:
 	with open(pathCV, 'r') as currentVersion:
 		cvIni = currentVersion.read()
@@ -27,7 +30,7 @@ except:
 	print('File "curVer.ini" not found')
 
 #pathUH = os.path.abspath('updHyst.ini ')
-pathUH = '/storage/emulated/0/DarkyBot/updHyst.ini'
+pathUH = '/storage/sdcard0/DarkyBot/updHyst.ini'
 try:
 	with open(pathUH, 'r') as updateHystory:
 		uhIni = updateHystory.read()
@@ -52,11 +55,11 @@ def init_message_from_chat(message):#определение сообщения �
 	elif message.startswith('Как дела, Дарки?') or message.startswith('Как дела Дарки?') or message.startswith('Как делишки, Дарки?') or message.startswith('Как делишки Дарки?'):
 		send_message_to_chat('У меня не может быть всё плохо пока я работаю :D')
 	elif message.startswith('Дарки, расскажи о себе') or message.startswith('Дарки расскажи о себе'):
-		with open(pathCurVer) as file:
+		with open(pathCV) as file:
 			curVer = file.read()
 		send_message_to_chat(curVer)
 	elif message.startswith('Дарки, история обновлений') or message.startswith('Дарки история обновлений'):
-		with open(pathUpdHyst) as file:
+		with open(pathUH) as file:
 			updHyst = file.read()
 		send_message_to_chat(updHyst)
 
