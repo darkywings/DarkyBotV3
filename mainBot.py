@@ -4,6 +4,9 @@ from vk_api.utils import get_random_id
 print('importing "sys"...')
 import sys
 
+print('importing "rrquests"...')
+import requests
+
 print('importing "subprocess"...')
 import subprocess
 
