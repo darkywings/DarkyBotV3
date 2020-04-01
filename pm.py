@@ -26,7 +26,7 @@ cvExist = 0
 uhExist = 0
 
 #pathCV = os.path.abspath('curVer.ini ')
-pathCV = '/storage/emulated/0/DarkyBot/curVer.ini'
+pathCV = '/storage/sdcard0/DarkyBot/curVer.ini'
 try:
 	with open(pathCV, 'r') as currentVersion:
 		cvIni = currentVersion.read()
@@ -36,7 +36,7 @@ except:
 	print('File "curVer.ini" not found')
 
 #pathUH = os.path.abspath('updHyst.ini ')
-pathUH = '/storage/emulated/0/DarkyBot/updHyst.ini'
+pathUH = '/storage/sdcard0/DarkyBot/updHyst.ini'
 try:
 	with open(pathUH, 'r') as updateHystory:
 		uhIni = updateHystory.read()
