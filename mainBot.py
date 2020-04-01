@@ -22,9 +22,12 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 print('importing "wget"...')
 import wget
 
+print('importing "accessToken"...')
+from accessToken import accessToken
+
 print('authorization...')
 group_id = 192784148
-vk_session = vk_api.VkApi(token='96f3e8e636604dcd8760c034827b677d845d35a7f8a32ba2d497b5a4a87ca41297a10447abc2eadb958ee') #авторизация как сообщество
+vk_session = vk_api.VkApi(token=accessToken) #авторизация как сообщество
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
 
@@ -42,7 +45,7 @@ pathCM = os.path.abspath('cm.py ')
 try:
 	with open(pathPM, 'r') as personalMessages:
 		pmPython = personalMessages.read()
-		pmFileExist = 1
+		pmFileExist = 1,
 		personalMessages.close()
 except:
 	print('err: file "pm.py" not found')
