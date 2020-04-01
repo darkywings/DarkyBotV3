@@ -1,24 +1,12 @@
-print('Starting...')
-
-print('Importing "requests"...')
+print('importing modules...')
 import requests
-
-print('Importing "os"...')
 import os
-
-print('Importing "vk_api"...')
 import vk_api
-
-print('Importing "accessToken"...')
 from accessToken import accessToken
+from vk_api.longpoll import VkLongPoll, VkEventType
 
 print('Authorization...')
 vk_session = vk_api.VkApi(token=accessToken)
-
-print('Importing "VkLongPoll"...')
-print('Importing "VkEventType"...')
-
-from vk_api.longpoll import VkLongPoll, VkEventType
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
 
@@ -95,7 +83,11 @@ def init_message_from_user(message): #определяет сообщения о
 		send_message_to_user('Я к вашим услугам')
 
 print('Done')
-
-for event in longpoll.listen():
-	if event.type == VkEventType.MESSAGE_NEW and event.to_me:#Слушаем longpoll, если пришло сообщение то:			
-		init_message_from_user(event.text)
+while True:
+	try:
+		for event in longpoll.listen(): #своеобразное прослушивание новых сообщений
+ 		   if event.type == VkEventType.MESSAGE_NEW:
+  		      init_message_from_user(event.text)
+	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
+        requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
+		print('<<timeout>>')
