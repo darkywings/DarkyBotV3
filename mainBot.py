@@ -319,6 +319,8 @@ def init_message_from_user(message): #функция отвечающая за �
 	elif message.startswith('Дарки, обнови главный скрипт') or message.startswith('Дарки обнови главный скрипт'):
 		print('user:', event.user_id, ':', event.text)
 		if event.user_id == 507365405:
+			os.killpg(os.getpgid(pmPID), signal.SIGTERM)
+			os.killpg(os.getpgid(cmPID), signal.SIGTERM)
 			print('download "mainBot.py"...')
 			send_message_to_user('Обновляю главный скрипт...')
 			try:
