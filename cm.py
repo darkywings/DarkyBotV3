@@ -61,7 +61,7 @@ print('done')
 while True:
 	try:
 		for event in botlongpoll.listen(): #своеобразное прослушивание новых сообщений
- 		   if event.type == VkEventType.MESSAGE_NEW:
+ 		   if event.type == VkBotEventType.MESSAGE_NEW:
   		      init_message_from_user(event.obj.message['text'])
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
         requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
