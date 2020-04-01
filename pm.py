@@ -1,19 +1,22 @@
 print('Starting...')
 
-print('Importing [requests]...')
+print('Importing "requests"...')
 import requests
 
-print('Importing [os]...')
+print('Importing "os"...')
 import os
 
-print('Importing [vk_api]...')
+print('Importing "vk_api"...')
 import vk_api
 
-print('Authorization...')
-vk_session = vk_api.VkApi(token='96f3e8e636604dcd8760c034827b677d845d35a7f8a32ba2d497b5a4a87ca41297a10447abc2eadb958ee')
+print('Importing "accessToken"...')
+from accessToken import accessToken
 
-print('Importing [VkLongPoll]...')
-print('Importing [VkEventType]...')
+print('Authorization...')
+vk_session = vk_api.VkApi(token=accessToken)
+
+print('Importing "VkLongPoll"...')
+print('Importing "VkEventType"...')
 
 from vk_api.longpoll import VkLongPoll, VkEventType
 longpoll = VkLongPoll(vk_session)
@@ -80,6 +83,13 @@ def init_message_from_user(message): #определяет сообщения о
 	elif "Команды" in event.text or "команды" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь')
+	elif "test" in event.text or "тест" in event.text or "Тест" in event.text or "Test" in event.text:
+		print('user:', event.user_id, ':', event.text)
+		if "test2310" in event.text or "тест2310" in event.text or "Тест2310" in event.text or "Test2310" in event.text:
+			send_message_to_user("Вы получили секрет! Ссылка на тестовый сервер")
+			send_message_to_user("Вот ваша ссылка: https://vk.me/join/AJQ1d7SbHhdQs8BxnX7faLXp")
+		else:
+			send_message_to_user('Вы почти у цели, введите вдобавок к "тест/test" дату рождения моего создателя в формате ДДММ\nПример:тест0206')
 	elif "Дарки" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Я к вашим услугам')
@@ -87,5 +97,5 @@ def init_message_from_user(message): #определяет сообщения о
 print('Done')
 
 for event in longpoll.listen():
-	if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:#Слушаем longpoll, если пришло сообщение то:			
+	if event.type == VkEventType.MESSAGE_NEW and event.to_me:#Слушаем longpoll, если пришло сообщение то:			
 		init_message_from_user(event.text)
