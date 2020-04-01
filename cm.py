@@ -1,16 +1,9 @@
-print('importing "get_random_id"...')
+print('importing modules...')
 from vk_api.utils import get_random_id
-
-print('importing "vk_api"...')
 import vk_api
-
-print('importing "os"...')
+import requests
 import os
-
-print('importing "VkBotLongPoll" and "VkBotEventType"...')
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-
-print('importing "accessToken"...')
 from accessToken import accessToken
 
 print('authorization...')
@@ -65,6 +58,11 @@ def init_message_from_chat(message):#определение сообщения �
 		send_message_to_chat(updHyst)
 
 print('done')
-for event in botlongpoll.listen():
-	if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat:
-		init_message_from_chat(event.obj.message['text'])
+while True:
+	try:
+		for event in longpoll.listen(): #своеобразное прослушивание новых сообщений
+ 		   if event.type == VkEventType.MESSAGE_NEW:
+  		      init_message_from_user(event.obj.message['text'])
+	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
+        requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
+		print('<<timeout>>')
