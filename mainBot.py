@@ -1,31 +1,13 @@
-print('importing "get_random_id"...')
+print('importing modules...')
 from vk_api.utils import get_random_id
-
-print('importing "sys"...')
 import sys
-
-print('importing "rrquests"...')
 import requests
-
-print('importing "subprocess"...')
 import subprocess
-
-print('importing "os"...')
 import os
-
-print('importing "signal"...')
 import signal
-
-print('importing "vk_api"...')
 import vk_api
-
-print('importing "VkLongPoll" and "VkEventType"...')
 from vk_api.longpoll import VkLongPoll, VkEventType
-
-print('importing "wget"...')
 import wget
-
-print('importing "accessToken"...')
 from accessToken import accessToken
 
 print('authorization...')
@@ -34,7 +16,7 @@ vk_session = vk_api.VkApi(token=accessToken) #авторизация как со
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
 
-print('checking files...')
+print('checking needed files...')
 
 pmFileExist = 0
 cmFileExist = 0
