@@ -36,16 +36,21 @@ print('checking files...')
 pmFileExist = 0
 cmFileExist = 0
 
-pathCV = os.path.abspath('curVer.ini ')
+'''pathCV = os.path.abspath('curVer.ini ')
 pathUH = os.path.abspath('updHyst.ini ')
 pathMB = os.path.abspath('mainBot.py ')
 pathPM = os.path.abspath('pm.py ')
-pathCM = os.path.abspath('cm.py ')
+pathCM = os.path.abspath('cm.py ')'''
+pathCV = '/storage/sdcard0/DarkyBot/curVer.ini'
+pathUH = '/storage/sdcard0/DarkyBot/updHyst.ini'
+pathMB = '/storage/sdcard0/DarkyBot/mainBot.py'
+pathPM = '/storage/sdcard0/DarkyBot/pm.py'
+pathCM = '/storage/sdcard0/DarkyBot/cm.py'
 
 try:
 	with open(pathPM, 'r') as personalMessages:
 		pmPython = personalMessages.read()
-		pmFileExist = 1,
+		pmFileExist = 1
 		personalMessages.close()
 except:
 	print('err: file "pm.py" not found')
