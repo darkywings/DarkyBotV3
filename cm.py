@@ -5,6 +5,7 @@ import requests
 import os
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from accessToken import accessToken
+import random
 
 print('authorization...')
 group_id = 192784148
@@ -56,6 +57,16 @@ def init_message_from_chat(message):#определение сообщения �
 		with open(pathUH) as file:
 			updHyst = file.read()
 		send_message_to_chat(updHyst)
+	elif message.startswith("Дарки выбери"):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		choosingMess = event.obj.message['text']
+		chooseStr = choosingMess.lstrip('Дарки ')
+		chooseStr = chooseStr.lstrip('выбери')
+		chooseList = chooseStr.split(' или')
+		chooseListLen = len(chooseList)
+		chooseRandInt = random.randint(0, chooseListLen)
+		chooseResult = chooseList[chooseRandInt - 1]
+		send_message_to_chat('Я выбираю' + chooseResult)
 
 print('done')
 while True:
