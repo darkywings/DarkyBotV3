@@ -341,7 +341,7 @@ print('done')
 while True:
 	try:
 		for event in longpoll.listen(): #своеобразное прослушивание новых сообщений
- 		   if event.type == VkEventType.MESSAGE_NEW:
+ 		   if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.from_user:
   		      init_message_from_user(event.text)
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
         requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
