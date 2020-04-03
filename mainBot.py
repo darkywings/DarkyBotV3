@@ -319,6 +319,7 @@ def init_message_from_user(message): #функция отвечающая за �
 					print('err')
 					send_message_to_user('Возникла ошибка при загрузке главного скрипта')
 				subprocess.Popen(['python', pathMB])
+				send_message_to_user('Обновление завершено')
 				raise SystemExit
 			if mode == 0:
 				print('download "mainBot.py"...')
@@ -333,6 +334,7 @@ def init_message_from_user(message): #функция отвечающая за �
 					print('err')
 					send_message_to_user('Возникла ошибка при загрузке главного скрипта')
 				subprocess.Popen(['python', pathMB])
+				send_message_to_user('Обновление завершено')
 				raise SystemExit
 		else:
 			send_message_to_user('В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
