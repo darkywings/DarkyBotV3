@@ -57,6 +57,19 @@ def init_message_from_chat(message):#определение сообщения �
 		with open(pathUH) as file:
 			updHyst = file.read()
 		send_message_to_chat(updHyst)
+	elif "Помощь" in event.obj.message['text'] or "помощь" in event.obj.message['text']:
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		send_message_to_chat('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Команды"')
+	elif "Команды" in event.obj.message['text'] or "команды" in event.obj.message['text']:
+		print('user:', event.chat_id, ':', event.obj.message['text'])
+		send_message_to_chat('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки какова вероятность <предложение>\n7. Дарки, попытка <действие>')
+	elif "test" in event.obj.message['text'] or "тест" in event.obj.message['text'] or "Тест" in event.obj.message['text'] or "Test" in event.obj.message['text']:
+		print('user:', event.chat_id, ':', event.obj.message['text'])
+		if "test2310" in event.text or "тест2310" in event.text or "Тест2310" in event.text or "Test2310" in event.text:
+			send_message_to_chat("Вы получили секрет! Ссылка на тестовый сервер")
+			send_message_to_chat("Вот ваша ссылка: https://vk.me/join/AJQ1d7SbHhdQs8BxnX7faLXp")
+		else:
+			send_message_to_chat('Вы почти у цели, введите вдобавок к "тест/test" дату рождения моего создателя в формате ДДММ\nПример:тест0206')
 	elif message.startswith("Дарки выбери"):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		choosingMess = event.obj.message['text']
@@ -67,6 +80,34 @@ def init_message_from_chat(message):#определение сообщения �
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
 		send_message_to_chat('Я выбираю' + chooseResult)
+	elif message.startswith('Дарки какова вероятность'):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		probabilityMess = event.obj.message['text']
+		probabilityStr = probabilityMess.lstrip('Дарки ')
+		probabilityStr = probabilityStr.lstrip('какова ')
+		probabilityStr = probabilityStr.lstrip('вероятность')
+		probabilityRandom = random.randint(0, 100)
+		probabilityResult = str(probabilityRandom) + '%'
+		send_message_to_chat('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
+	elif message.startswith('Дарки, попытка'):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		tryMess = event.obj.message['text']
+		tryStr = tryMess.lstrip('Дарки, ')
+		tryStr = tryStr.lstrip('попытка')
+		tryRandom = random.randint(0, 1)
+		if tryRandom == 0:
+			send_message_to_chat('Ваша попытка ' + tryStr + ' вышла неудачной')
+		if tryRandom == 1:
+			send_message_to_chat('Ваша попытка ' + tryStr + ' вышла удачной')
+	elif message.startswith('Дарки запустись') or message.startswith('Дарки. запустись') or message.startswith('Дарки перезапустись') or message.startswith('Дарки. перезапустись') or message.startswith('Дарки выключись') or message.startswith('Дарки. выключись') or message.startswith('Дарки проверь наличие своих файлов') or message.startswith('Дарки. проверь наличие своих файлов') or message.startswith('Дарки обновись') or message.startswith('Дарки. обновись')  or message.startswith('Дарки обнови главный скрипт') or message.startswith('Дарки. обнови главный скрипт'):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		send_message_to_chat('Данная команда не работает в беседе')
+	elif "Дарки" in event.obj.message['text']:
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		send_message_to_chat('Я к вашим услугам')
+	elif "Дурки" in event.obj.message['text']:
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		send_message_to_chat('Обидно ;с')
 
 print('done')
 while True:
