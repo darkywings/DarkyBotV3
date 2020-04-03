@@ -65,7 +65,7 @@ def init_message_from_chat(message):#определение сообщения �
 		send_message_to_chat('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки какова вероятность <предложение>\n7. Дарки, попытка <действие>')
 	elif "test" in event.obj.message['text'] or "тест" in event.obj.message['text'] or "Тест" in event.obj.message['text'] or "Test" in event.obj.message['text']:
 		print('user:', event.chat_id, ':', event.obj.message['text'])
-		if "test2310" in event.text or "тест2310" in event.text or "Тест2310" in event.text or "Test2310" in event.text:
+		if "test2310" in event.obj.message['text'] or "тест2310" in event.obj.message['text'] or "Тест2310" in event.obj.message['text'] or "Test2310" in event.obj.message['text']:
 			send_message_to_chat("Вы получили секрет! Ссылка на тестовый сервер")
 			send_message_to_chat("Вот ваша ссылка: https://vk.me/join/AJQ1d7SbHhdQs8BxnX7faLXp")
 		else:
