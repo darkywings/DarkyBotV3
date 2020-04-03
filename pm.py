@@ -47,7 +47,7 @@ def send_message_to_user(message):
 	)
 
 def init_message_from_user(message): #определяет сообщения от пользователя
-	if "Прив" in event.text or "прив" in event.text or "Преет" in event.text or "преет" in event.text or "Ку" in event.text or "ку" in event.text or "Здрасте" in event.text or "здрасте" in event.text or "Здравствуй" in event.text or "здравствуй" in event.text or "Даров" in event.text or "даров" in event.text or "Дороу" in event.text or "дороу" in event.text or "Преть" in event.text or "преть" in event.text or "Прувет" in event.text or "прувет" in event.text or "Здрасть" in event.text or "здрасть" in event.text:
+	if message.startswith('Привет, Дарки') or message.startswith('Преет, Дарки') or message.startswith('Преет Дарки') or message.startswith('Привет Дарки') or message.startswith('Привки, Дарки') or message.startswith('Здрасте, Дарки') or message.startswith('Здравствуй, Дарки') or message.startswith('Здравствуйте, Дарки') or message.startswith('Преть, Дарки') or message.startswith('Привки Дарки') or message.startswith('Здрасте Дарки') or message.startswith('Здравствуй Дарки') or message.startswith('Здравствуйте Дарки') or message.startswith('Преть Дарки') or message.startswith('Здрастете, Дарки') or message.startswith('Здрастете Дарки') or message.startswith('Ку Дарки') or message.startswith('Ку, Дарки') or message.startswith('Куку Дарки') or message.startswith('Куку, Дарки') or message.startswith('Прувет, Дарки') or message.startswith('Прувет Дарки') or message.startswith('Прив Дарки'):
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Преть')
 	elif message.startswith("Дарки выбери"):
@@ -60,6 +60,25 @@ def init_message_from_user(message): #определяет сообщения о
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
 		send_message_to_user('Я выбираю' + chooseResult)
+	elif message.startswith('Дарки какова вероятность'):
+		print('user:', event.user_id, ':', event.text)
+		probabilityMess = event.text
+		probabilityStr = probabilityMess.lstrip('Дарки ')
+		probabilityStr = probabilityStr.lstrip('какова ')
+		probabilityStr = probabilityStr.lstrip('вероятность')
+		probabilityRandom = random.randint(0, 100)
+		probabilityResult = str(probabilityRandom) + '%'
+		send_message_to_user('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
+	elif message.startswith('Дарки, попытка'):
+		print('user:', event.user_id, ':', event.text)
+		tryMess = event.text
+		tryStr = tryMess.lstrip('Дарки, ')
+		tryStr = tryStr.lstrip('попытка')
+		tryRandom = random.randint(0, 1)
+		if tryRandom == 0:
+			send_message_to_user('Ваша попытка ' + tryStr + ' вышла неудачной')
+		if tryRandom == 1:
+			send_message_to_user('Ваша попытка ' + tryStr + ' вышла удачной')
 	elif "расскажи о себе" in event.text or "Расскажи о себе" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		if cvExist == 1:
@@ -81,7 +100,7 @@ def init_message_from_user(message): #определяет сообщения о
 		send_message_to_user('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Команды"')
 	elif "Команды" in event.text or "команды" in event.text:
 		print('user:', event.user_id, ':', event.text)
-		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>')
+		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки какова вероятность <предложение>\n7. Дарки, попытка <действие>')
 	elif "test" in event.text or "тест" in event.text or "Тест" in event.text or "Test" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		if "test2310" in event.text or "тест2310" in event.text or "Тест2310" in event.text or "Test2310" in event.text:
@@ -92,6 +111,9 @@ def init_message_from_user(message): #определяет сообщения о
 	elif "Дарки" in event.text and not "запустись" in event.text and not "перезапустись" in event.text and not "выключись" in event.text and not "проверь наличие своих файлов" in event.text and not "обновись" in event.text and not "обнови главный скрипт" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Я к вашим услугам')
+	elif "Дурки" in event.text:
+		print('user:', event.user_id, ':', event.text)
+		send_message_to_user('Обидно ;с')
 
 print('Done')
 while True:
