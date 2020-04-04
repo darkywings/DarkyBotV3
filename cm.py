@@ -102,9 +102,6 @@ def init_message_from_chat(message):#определение сообщения �
 	elif message.startswith('Дарки запустись') or message.startswith('Дарки. запустись') or message.startswith('Дарки перезапустись') or message.startswith('Дарки. перезапустись') or message.startswith('Дарки выключись') or message.startswith('Дарки. выключись') or message.startswith('Дарки проверь наличие своих файлов') or message.startswith('Дарки. проверь наличие своих файлов') or message.startswith('Дарки обновись') or message.startswith('Дарки. обновись')  or message.startswith('Дарки обнови главный скрипт') or message.startswith('Дарки. обнови главный скрипт'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Данная команда не работает в беседе')
-	elif "Дарки" in event.obj.message['text']:
-		print('chat:', event.chat_id, ':', event.obj.message['text'])
-		send_message_to_chat('Я к вашим услугам')
 	elif "Дурки" in event.obj.message['text']:
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Обидно ;с')
