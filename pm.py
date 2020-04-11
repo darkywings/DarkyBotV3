@@ -11,6 +11,14 @@ vk_session = vk_api.VkApi(token=accessToken)
 longpoll = VkLongPoll(vk_session)
 vk = vk_session.get_api()
 
+i = 0
+outMess = ''
+pathMess = '/storage/sdcard0/DarkyBot/mess'
+try:
+	os.mkdir(pathMess)
+except:
+	pass
+
 cvExist = 0
 uhExist = 0
 
@@ -50,21 +58,44 @@ def init_message_from_user(message): #определяет сообщения о
 	if message.startswith('Привет, Дарки') or message.startswith('Преет, Дарки') or message.startswith('Преет Дарки') or message.startswith('Привет Дарки') or message.startswith('Привки, Дарки') or message.startswith('Здрасте, Дарки') or message.startswith('Здравствуй, Дарки') or message.startswith('Здравствуйте, Дарки') or message.startswith('Преть, Дарки') or message.startswith('Привки Дарки') or message.startswith('Здрасте Дарки') or message.startswith('Здравствуй Дарки') or message.startswith('Здравствуйте Дарки') or message.startswith('Преть Дарки') or message.startswith('Здрастете, Дарки') or message.startswith('Здрастете Дарки') or message.startswith('Ку Дарки') or message.startswith('Ку, Дарки') or message.startswith('Куку Дарки') or message.startswith('Куку, Дарки') or message.startswith('Прувет, Дарки') or message.startswith('Прувет Дарки') or message.startswith('Прив Дарки'):
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Преть')
+	elif message.startswith("Дарки, голос") or message.startswith("Дарки голос"):
+		print('user:', event.user_id, ':', event.text)
+		randSendLen = random.randint(2, 15)
+		with open(pathMess + '/' + event.user_id + '.ini') as messRead:
+			allWords = messRead.read()
+			messRead.close()
+		wordList = allWords.lstrip(' ')
+		wordList = wordList.split(' ')
+		wordListLen = len(wordList)
+		while i < randSendLen:
+			randWord = random.randint(1, wordListLen)
+			wordOut = wordList[randWord - 1]
+			outMess = outMess + ' ' + wordOut
+			i = i + 1
+		send_message_to_user(outMess)
+		i = 0
+		outMess = ''
+	elif message.startswith("Дарки, сброс собранных данных") or message.startswith("Дарки сброс собранных данных"):
+		print('user:', event.user_id, ':', event.text)
+		send_message_to_user('Очищаю собранные данные об этом диалоге...')
+		with open(pathMess + '/' + str(event.user_id) + '.ini', 'w') as messEarse:
+			messEarse.close()
+		send_message_to_user('Данные очищены')
 	elif message.startswith("Дарки выбери"):
 		print('user:', event.user_id, ':', event.text)
 		choosingMess = event.text
 		chooseStr = choosingMess.lstrip('Дарки ')
 		chooseStr = chooseStr.lstrip('выбери')
+		chooseStr = chooseStr.lstrip(' ')
 		chooseList = chooseStr.split(' или')
 		chooseListLen = len(chooseList)
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
 		send_message_to_user('Я выбираю' + chooseResult)
-	elif message.startswith('Дарки какова вероятность'):
+	elif message.startswith('Дарки, вероятность'):
 		print('user:', event.user_id, ':', event.text)
 		probabilityMess = event.text
-		probabilityStr = probabilityMess.lstrip('Дарки ')
-		probabilityStr = probabilityStr.lstrip('какова ')
+		probabilityStr = probabilityMess.lstrip('Дарки, ')
 		probabilityStr = probabilityStr.lstrip('вероятность')
 		probabilityRandom = random.randint(0, 100)
 		probabilityResult = str(probabilityRandom) + '%'
@@ -100,7 +131,7 @@ def init_message_from_user(message): #определяет сообщения о
 		send_message_to_user('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Команды"')
 	elif "Команды" in event.text or "команды" in event.text:
 		print('user:', event.user_id, ':', event.text)
-		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки какова вероятность <предложение>\n7. Дарки, попытка <действие>')
+		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки. голос\n9. Дарки, сброс собранных данных')
 	elif "test" in event.text or "тест" in event.text or "Тест" in event.text or "Test" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		if "test2310" in event.text or "тест2310" in event.text or "Тест2310" in event.text or "Test2310" in event.text:
@@ -119,8 +150,12 @@ print('Done')
 while True:
 	try:
 		for event in longpoll.listen(): #своеобразное прослушивание новых сообщений
- 		   if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.from_user:
-  		      init_message_from_user(event.text)
+			if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.from_user:
+				messageText = event.text
+				with open(pathMess + '/' + str(event.user_id) + '.ini', 'a') as messWrite:
+					messWrite.write(' ' + messageText)
+					messWrite.close()
+				init_message_from_user(event.text)
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
         requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
 		print('<<timeout>>')
