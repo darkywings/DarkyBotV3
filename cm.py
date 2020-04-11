@@ -13,6 +13,10 @@ vk_session = vk_api.VkApi(token=accessToken)
 botlongpoll = VkBotLongPoll(vk_session, group_id)
 vk = vk_session.get_api()
 
+i = 0
+outMess = ''
+pathMess = 'storage/sdcard0/DarkyBot/mess'
+
 #pathCV = os.path.abspath('curVer.ini ')
 pathCV = '/storage/sdcard0/DarkyBot/curVer.ini'
 try:
@@ -61,10 +65,10 @@ def init_message_from_chat(message):#определение сообщения �
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Команды"')
 	elif "Команды" in event.obj.message['text'] or "команды" in event.obj.message['text']:
-		print('user:', event.chat_id, ':', event.obj.message['text'])
-		send_message_to_chat('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки какова вероятность <предложение>\n7. Дарки, попытка <действие>')
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		send_message_to_chat('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки. голос\n9. Дарки, сброс собранных данных')
 	elif "test" in event.obj.message['text'] or "тест" in event.obj.message['text'] or "Тест" in event.obj.message['text'] or "Test" in event.obj.message['text']:
-		print('user:', event.chat_id, ':', event.obj.message['text'])
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		if "test2310" in event.obj.message['text'] or "тест2310" in event.obj.message['text'] or "Тест2310" in event.obj.message['text'] or "Test2310" in event.obj.message['text']:
 			send_message_to_chat("Вы получили секрет! Ссылка на тестовый сервер")
 			send_message_to_chat("Вот ваша ссылка: https://vk.me/join/AJQ1d7SbHhdQs8BxnX7faLXp")
@@ -75,16 +79,16 @@ def init_message_from_chat(message):#определение сообщения �
 		choosingMess = event.obj.message['text']
 		chooseStr = choosingMess.lstrip('Дарки ')
 		chooseStr = chooseStr.lstrip('выбери')
+		chooseList = chooseStr.split(' ')
 		chooseList = chooseStr.split(' или')
 		chooseListLen = len(chooseList)
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
 		send_message_to_chat('Я выбираю' + chooseResult)
-	elif message.startswith('Дарки какова вероятность'):
+	elif message.startswith('Дарки, вероятность'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		probabilityMess = event.obj.message['text']
-		probabilityStr = probabilityMess.lstrip('Дарки ')
-		probabilityStr = probabilityStr.lstrip('какова ')
+		probabilityStr = probabilityMess.lstrip('Дарки, ')
 		probabilityStr = probabilityStr.lstrip('вероятность')
 		probabilityRandom = random.randint(0, 100)
 		probabilityResult = str(probabilityRandom) + '%'
@@ -102,6 +106,29 @@ def init_message_from_chat(message):#определение сообщения �
 	elif message.startswith('Дарки запустись') or message.startswith('Дарки. запустись') or message.startswith('Дарки перезапустись') or message.startswith('Дарки. перезапустись') or message.startswith('Дарки выключись') or message.startswith('Дарки. выключись') or message.startswith('Дарки проверь наличие своих файлов') or message.startswith('Дарки. проверь наличие своих файлов') or message.startswith('Дарки обновись') or message.startswith('Дарки. обновись')  or message.startswith('Дарки обнови главный скрипт') or message.startswith('Дарки. обнови главный скрипт'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Данная команда не работает в беседе')
+	elif message.startswith("Дарки, голос") or message.startswith("Дарки голос"):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		randSendLen = random.randint(2, 15)
+		with open(pathMess + '/' + event.chat_id + '.ini') as messRead:
+			allWords = messRead.read()
+			messRead.close()
+		wordList = allWords.lstrip(' ')
+		wordList = wordList.split(' ')
+		wordListLen = len(wordList)
+		while i < randSendLen:
+			randWord = random.randint(1, wordListLen)
+			wordOut = wordList[randWord - 1]
+			outMess = outMess + ' ' + wordOut
+			i = i + 1
+		send_message_to_chat(outMess)
+		i = 0
+		outMess = ''
+	elif message.startswith("Дарки, сброс собранных данных") or message.startswith("Дарки сброс собранных данных"):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		send_message_to_chat('Очищаю собранные данные об этом диалоге...')
+		with open(pathMess + '/' + str(event.chat_id) + '.ini', 'w') as messEarse:
+			messEarse.close()
+		send_message_to_chat('Данные очищены')
 	elif "Дурки" in event.obj.message['text']:
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Обидно ;с')
@@ -110,8 +137,12 @@ print('done')
 while True:
 	try:
 		for event in botlongpoll.listen(): #своеобразное прослушивание новых сообщений
- 		   if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat:
-  		      init_message_from_chat(event.obj.message['text'])
+			if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat:
+				messageText = event.obj.message['text']
+				with open(pathMess + '/' + str(event.chat_id) + '.ini', 'a') as messWrite:
+					messWrite.write(' ' + messageText)
+					messWrite.close()
+				init_message_from_chat(event.obj.message['text'])
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
         requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
 		print('<<timeout>>')
