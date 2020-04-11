@@ -15,7 +15,7 @@ vk = vk_session.get_api()
 
 i = 0
 outMess = ''
-pathMess = 'storage/sdcard0/DarkyBot/mess'
+pathMess = '/storage/sdcard0/DarkyBot/mess'
 try:
 	os.mkdir(pathMess)
 except:
