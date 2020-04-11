@@ -149,7 +149,7 @@ while True:
 					with open(pathMess + '/' + str(event.chat_id) + '.ini', 'a') as messWrite:
 						messWrite.write(' ' + messageText)
 						messWrite.close()
-				expect:
+				except:
 					with open(pathMess + '/' + str(event.chat_id) + '.ini', 'w') as messFile:
 						messFile.close()
 					with open(pathMess + '/' + str(event.chat_id) + '.ini', 'a') as messWrite:
