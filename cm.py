@@ -16,6 +16,10 @@ vk = vk_session.get_api()
 i = 0
 outMess = ''
 pathMess = 'storage/sdcard0/DarkyBot/mess'
+try:
+	os.mkdir(pathMess)
+except:
+	pass
 
 #pathCV = os.path.abspath('curVer.ini ')
 pathCV = '/storage/sdcard0/DarkyBot/curVer.ini'
