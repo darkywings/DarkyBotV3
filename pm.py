@@ -55,6 +55,8 @@ def send_message_to_user(message):
 	)
 
 def init_message_from_user(message): #определяет сообщения от пользователя
+	global i
+	global outMess
 	if message.startswith('Привет, Дарки') or message.startswith('Преет, Дарки') or message.startswith('Преет Дарки') or message.startswith('Привет Дарки') or message.startswith('Привки, Дарки') or message.startswith('Здрасте, Дарки') or message.startswith('Здравствуй, Дарки') or message.startswith('Здравствуйте, Дарки') or message.startswith('Преть, Дарки') or message.startswith('Привки Дарки') or message.startswith('Здрасте Дарки') or message.startswith('Здравствуй Дарки') or message.startswith('Здравствуйте Дарки') or message.startswith('Преть Дарки') or message.startswith('Здрастете, Дарки') or message.startswith('Здрастете Дарки') or message.startswith('Ку Дарки') or message.startswith('Ку, Дарки') or message.startswith('Куку Дарки') or message.startswith('Куку, Дарки') or message.startswith('Прувет, Дарки') or message.startswith('Прувет Дарки') or message.startswith('Прив Дарки'):
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Преть')
@@ -152,9 +154,16 @@ while True:
 		for event in longpoll.listen(): #своеобразное прослушивание новых сообщений
 			if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.from_user:
 				messageText = event.text
-				with open(pathMess + '/' + str(event.user_id) + '.ini', 'a') as messWrite:
-					messWrite.write(' ' + messageText)
-					messWrite.close()
+				try:
+					with open(pathMess + '/' + str(event.user_id) + '.ini', 'a') as messWrite:
+						messWrite.write(' ' + messageText)
+						messWrite.close()
+				except:
+					with open(pathMess + '/' + str(event.user_id) + '.ini', 'w') as messFile:
+						messFile.close()
+					with open(pathMess + '/' + str(event.user_id) + '.ini', 'a') as messWrite:
+						messWrite.write(' ' + messageText)
+						messWrite.close()
 				init_message_from_user(event.text)
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
         requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
