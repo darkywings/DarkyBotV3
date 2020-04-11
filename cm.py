@@ -115,7 +115,7 @@ def init_message_from_chat(message):#определение сообщения �
 	elif message.startswith("Дарки, голос") or message.startswith("Дарки голос"):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		randSendLen = random.randint(2, 15)
-		with open(pathMess + '/' + event.chat_id + '.ini') as messRead:
+		with open(pathMess + '/' + str(event.chat_id) + '.ini') as messRead:
 			allWords = messRead.read()
 			messRead.close()
 		wordList = allWords.lstrip(' ')
