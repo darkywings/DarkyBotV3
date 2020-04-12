@@ -93,7 +93,7 @@ def init_message_from_chat(message):#определение сообщения �
 		chooseListLen = len(chooseList)
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
-		send_message_to_chat('Я выбираю' + chooseResult)
+		send_message_to_chat('Я выбираю ' + chooseResult)
 	elif message.startswith('Дарки, вероятность') or message.startswith('Дарки вероятность'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		probabilityMess = event.obj.message['text']
