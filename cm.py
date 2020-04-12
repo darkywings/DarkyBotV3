@@ -80,35 +80,44 @@ def init_message_from_chat(message):#определение сообщения �
 			send_message_to_chat("Вот ваша ссылка: https://vk.me/join/AJQ1d7SbHhdQs8BxnX7faLXp")
 		else:
 			send_message_to_chat('Вы почти у цели, введите вдобавок к "тест/test" дату рождения моего создателя в формате ДДММ\nПример:тест0206')
-	elif message.startswith("Дарки выбери"):
+	elif message.startswith("Дарки выбери") or message.startswith("Дарки, выбери"):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		choosingMess = event.obj.message['text']
-		chooseStr = choosingMess.lstrip('Дарки ')
+		if message.startswith("Дарки выбери"):
+			chooseStr = choosingMess.lstrip('Дарки ')
+		if message.startswith("Дарки, выбери"):
+			chooseStr = choosingMess.lstrip('Дарки, ')
 		chooseStr = chooseStr.lstrip('выбери')
-		chooseList = chooseStr.split(' ')
-		chooseList = chooseStr.split(' или')
+		chooseStr = chooseStr.lstrip(' ')
+		chooseList = chooseStr.split(' или ')
 		chooseListLen = len(chooseList)
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
 		send_message_to_chat('Я выбираю' + chooseResult)
-	elif message.startswith('Дарки, вероятность'):
+	elif message.startswith('Дарки, вероятность') or message.startswith('Дарки вероятность'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		probabilityMess = event.obj.message['text']
-		probabilityStr = probabilityMess.lstrip('Дарки, ')
+		if message.startswith('Дарки, вероятность'):
+			probabilityStr = probabilityMess.lstrip('Дарки, ')
+		if message.startswith('Дарки вероятность'):
+			probabilityStr = probabilityMess.lstrip('Дарки ')
 		probabilityStr = probabilityStr.lstrip('вероятность')
 		probabilityRandom = random.randint(0, 100)
 		probabilityResult = str(probabilityRandom) + '%'
 		send_message_to_chat('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
-	elif message.startswith('Дарки, попытка'):
+	elif message.startswith('Дарки, попытка') or message.startswith('Дарки попытка'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		tryMess = event.obj.message['text']
-		tryStr = tryMess.lstrip('Дарки, ')
+		if message.startswith('Дарки, попытка'):
+			tryStr = tryMess.lstrip('Дарки, ')
+		if message.startswith('Дарки попытка'):
+			tryStr = tryMess.lstrip('Дарки ')
 		tryStr = tryStr.lstrip('попытка')
 		tryRandom = random.randint(0, 1)
 		if tryRandom == 0:
-			send_message_to_chat('Ваша попытка ' + tryStr + ' вышла неудачной')
+			send_message_to_chat('Попытка' + tryStr + ' вышла неудачной')
 		if tryRandom == 1:
-			send_message_to_chat('Ваша попытка ' + tryStr + ' вышла удачной')
+			send_message_to_chat('Попытка' + tryStr + ' вышла удачной')
 	elif message.startswith('Дарки запустись') or message.startswith('Дарки. запустись') or message.startswith('Дарки перезапустись') or message.startswith('Дарки. перезапустись') or message.startswith('Дарки выключись') or message.startswith('Дарки. выключись') or message.startswith('Дарки проверь наличие своих файлов') or message.startswith('Дарки. проверь наличие своих файлов') or message.startswith('Дарки обновись') or message.startswith('Дарки. обновись')  or message.startswith('Дарки обнови главный скрипт') or message.startswith('Дарки. обнови главный скрипт'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Данная команда не работает в беседе')
@@ -135,6 +144,24 @@ def init_message_from_chat(message):#определение сообщения �
 		with open(pathMess + '/' + str(event.chat_id) + '.ini', 'w') as messEarse:
 			messEarse.close()
 		send_message_to_chat('Данные очищены')
+	elif message.startswith("Дарки, размер собранных данных") or message.startswith("Дарки размер собранных данных"):
+		print('chat:', event.chat_id, ':', event.obj.message['text'])
+		sizePath = pathMess + '/' + str(event.chat_id) + '.ini'
+		fSize = os.path.getsize(sizePath)
+		sizeType = 0
+		while fSize > 1024:
+			fSize = fSize / 1024
+			sizeType = sizeType + 1
+		if sizeType == 0:
+			sizeTypeStr = 'Б'
+		elif sizeType == 1:
+			sizeTypeStr = 'КБ'
+		elif sizeType == 2:
+			sizeTypeStr = 'МБ'
+		elif sizeType == 3:
+			sizeTypeStr = 'ГБ'
+		fSize = round(fSize, 2)
+		send_message_to_chat('Размер собранных данных об этом диалоге составляет: ' + str(fSize) + ' ' + sizeTypeStr)
 	elif "Дурки" in event.obj.message['text']:
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Обидно ;с')
