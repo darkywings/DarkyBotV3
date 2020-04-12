@@ -98,7 +98,7 @@ def init_message_from_user(message): #определяет сообщения о
 			sizeTypeStr = 'МБ'
 		elif sizeType == 3:
 			sizeTypeStr = 'ГБ'
-		send_message_to_user('Размер собранных данных об этом диалоге составляет: ', fSize, ' ', sizeTypeStr)
+		send_message_to_user('Размер собранных данных об этом диалоге составляет: ' + fSize + ' ' + sizeTypeStr)
 	elif message.startswith("Дарки выбери") or message.startswith("Дарки, выбери"):
 		print('user:', event.user_id, ':', event.text)
 		choosingMess = event.text
