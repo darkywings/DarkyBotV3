@@ -83,35 +83,60 @@ def init_message_from_user(message): #определяет сообщения о
 		with open(pathMess + '/' + str(event.user_id) + '.ini', 'w') as messEarse:
 			messEarse.close()
 		send_message_to_user('Данные очищены')
-	elif message.startswith("Дарки выбери"):
+	elif message.startswith("Дарки, размер собранных данных") or message.startswith("Дарки размер собранных данных"):
+		sizePath = pathMess + '/' + str(event.user_id) + '.ini'
+		fSize = os.path.getsize(sizePath)
+		sizeType = 0
+		while fSise > 1024:
+			fSize = fSize / 1024
+			sizeType = sizeType + 1
+		if sizeType == 0:
+			sizeTypeStr = 'Б'
+		elif sizeType == 1:
+			sizeTypeStr = 'КБ'
+		elif sizeType == 2:
+			sizeTypeStr = 'МБ'
+		elif sizeType == 3:
+			sizeTypeStr = 'ГБ'
+		send_message_to_user('Размер собранных данных об этом диалоге составляет: ', fSize, ' ', sizeTypeStr)
+	elif message.startswith("Дарки выбери") or message.startswith("Дарки, выбери"):
 		print('user:', event.user_id, ':', event.text)
 		choosingMess = event.text
-		chooseStr = choosingMess.lstrip('Дарки ')
+		if message.startswith("Дарки выбери"):
+			chooseStr = choosingMess.lstrip('Дарки ')
+		if message.startswith("Дарки, выбери"):
+			chooseStr = choosingMess.lstrip('Дарки, ')
 		chooseStr = chooseStr.lstrip('выбери')
 		chooseStr = chooseStr.lstrip(' ')
-		chooseList = chooseStr.split(' или')
+		chooseList = chooseStr.split(' или ')
 		chooseListLen = len(chooseList)
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
-		send_message_to_user('Я выбираю' + chooseResult)
-	elif message.startswith('Дарки, вероятность'):
+		send_message_to_user('Я выбираю ' + chooseResult)
+	elif message.startswith('Дарки, вероятность') or message.startswith('Дарки вероятность'):
 		print('user:', event.user_id, ':', event.text)
 		probabilityMess = event.text
-		probabilityStr = probabilityMess.lstrip('Дарки, ')
+		if message.startswith('Дарки, вероятность'):
+			probabilityStr = probabilityMess.lstrip('Дарки, ')
+		if message.startswith('Дарки вероятность'):
+			probabilityStr = probabilityMess.lstrip('Дарки')
 		probabilityStr = probabilityStr.lstrip('вероятность')
 		probabilityRandom = random.randint(0, 100)
 		probabilityResult = str(probabilityRandom) + '%'
 		send_message_to_user('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
-	elif message.startswith('Дарки, попытка'):
+	elif message.startswith('Дарки, попытка') or message.startswith('Дарки попытка'):
 		print('user:', event.user_id, ':', event.text)
 		tryMess = event.text
-		tryStr = tryMess.lstrip('Дарки, ')
+		if message.startswith('Дарки, попытка'):
+			tryStr = tryMess.lstrip('Дарки, ')
+		if message.startswith('Дарки попытка'):
+			tryStr = tryMess.lstrip('Дарки ')
 		tryStr = tryStr.lstrip('попытка')
 		tryRandom = random.randint(0, 1)
 		if tryRandom == 0:
-			send_message_to_user('Ваша попытка ' + tryStr + ' вышла неудачной')
+			send_message_to_user('Попытка' + tryStr + ' вышла неудачной')
 		if tryRandom == 1:
-			send_message_to_user('Ваша попытка ' + tryStr + ' вышла удачной')
+			send_message_to_user('Попытка' + tryStr + ' вышла удачной')
 	elif "расскажи о себе" in event.text or "Расскажи о себе" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		if cvExist == 1:
@@ -133,7 +158,7 @@ def init_message_from_user(message): #определяет сообщения о
 		send_message_to_user('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Команды"')
 	elif "Команды" in event.text or "команды" in event.text:
 		print('user:', event.user_id, ':', event.text)
-		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки, голос\n9. Дарки, сброс собранных данных')
+		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки. голос\n9. Дарки, сброс собранных данных')
 	elif "test" in event.text or "тест" in event.text or "Тест" in event.text or "Test" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		if "test2310" in event.text or "тест2310" in event.text or "Тест2310" in event.text or "Test2310" in event.text:
@@ -162,7 +187,7 @@ while True:
 					with open(pathMess + '/' + str(event.user_id) + '.ini', 'w') as messFile:
 						messFile.close()
 					with open(pathMess + '/' + str(event.user_id) + '.ini', 'a') as messWrite:
-						messWrite.write(' ' + messageText)
+						messWrite.write(' ' + messageTextf)
 						messWrite.close()
 				init_message_from_user(event.text)
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
