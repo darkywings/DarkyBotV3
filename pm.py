@@ -87,7 +87,7 @@ def init_message_from_user(message): #определяет сообщения о
 		sizePath = pathMess + '/' + str(event.user_id) + '.ini'
 		fSize = os.path.getsize(sizePath)
 		sizeType = 0
-		while fSise > 1024:
+		while fSize > 1024:
 			fSize = fSize / 1024
 			sizeType = sizeType + 1
 		if sizeType == 0:
