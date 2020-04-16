@@ -491,6 +491,9 @@ while True:
 				rpId = event.chat_id
 				try:
 					os.mkdir(rpPath + '/' + str(rpId))
+				except:
+					pass
+				try:
 					os.mkdir(nickPath + '/' + str(rpId))
 				except:
 					pass
