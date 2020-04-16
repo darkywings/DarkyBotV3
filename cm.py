@@ -322,16 +322,19 @@ def init_message_from_chat(message):#определение сообщения �
 		rpCommandsOut = ''
 		currCommNum = 1
 		currComm = 0
-		while currComm < rpCommandsLen:
-			currCommandName = rpCommands[currComm]
-			currCommandName = currCommandName.rstrip('ini')
-			currCommandName = currCommandName.rstrip('.')
-			currCommandName = currCommandName.capitalize()
-			rpCommandsOut = rpCommandsOut + '\n' + str(currCommNum) + '. ' + currCommandName
-			currComm = currComm + 1
-			currCommNum = currCommNum + 1
-		allRPCommands = 'РП-Команды:' + rpCommandsOut
-		send_message_to_chat(allRPCommands)
+		if rpCommandsLen > 0:
+			while currComm < rpCommandsLen:
+				currCommandName = rpCommands[currComm]
+				currCommandName = currCommandName.rstrip('ini')
+				currCommandName = currCommandName.rstrip('.')
+				currCommandName = currCommandName.capitalize()
+				rpCommandsOut = rpCommandsOut + '\n' + str(currCommNum) + '. ' + currCommandName
+				currComm = currComm + 1
+				currCommNum = currCommNum + 1
+			allRPCommands = 'РП-Команды:' + rpCommandsOut
+			send_message_to_chat(allRPCommands)
+		else:
+			send_message_to_chat('В этой беседе пока что нет рп команд')
 	elif message.startswith("Дарки, перечисли никнеймы") or message.startswith('Дарки перечисли никнеймы'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		nicknames = os.listdir(nickPath + '/' + str(rpId))
@@ -339,21 +342,24 @@ def init_message_from_chat(message):#определение сообщения �
 		nicknamesOut = ''
 		currNickNum = 1
 		currNick = 0
-		while currNick < nicknamesLen:
-			currNickname = nicknames[currNick]
-			currNickname = currNickname.rstrip('ini')
-			currNickname = currNickname.rstrip('.')
-			with open(nickPath + '/' + str(rpId) + '/' + currNickname + '.ini') as currNickId:
-				currNickContent = currNickId.read()
-				currNickId.close()
-			currNickContent = currNickContent.split('-')
-			currNickUserId = currNickContent[0]
-			currNickNameId = currNickContent[1]
-			nicknamesOut = nicknamesOut + '\n' + str(currNickNum) + '. [id' + currNickUserId + '|' + currNickNameId + ']'
-			currNick = currNick + 1
-			currNickNum = currNickNum + 1
-		allNicknames = 'Все никнеймы:' + nicknamesOut
-		send_message_to_chat(allNicknames)
+		if nicknamesLen > 0:
+			while currNick < nicknamesLen:
+				currNickname = nicknames[currNick]
+				currNickname = currNickname.rstrip('ini')
+				currNickname = currNickname.rstrip('.')
+				with open(nickPath + '/' + str(rpId) + '/' + currNickname + '.ini') as currNickId:
+					currNickContent = currNickId.read()
+					currNickId.close()
+				currNickContent = currNickContent.split('-')
+				currNickUserId = currNickContent[0]
+				currNickNameId = currNickContent[1]
+				nicknamesOut = nicknamesOut + '\n' + str(currNickNum) + '. [id' + currNickUserId + '|' + currNickNameId + ']'
+				currNick = currNick + 1
+				currNickNum = currNickNum + 1
+			allNicknames = 'Все никнеймы:' + nicknamesOut
+			send_message_to_chat(allNicknames)
+		else:
+			send_messages_to_chat('В этой беседе нет сохранённых никнеймов')
 	elif message.startswith('Дарки, команды управления рп командами') or message.startswith('Дарки команды управления рп командами'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Все доступные на данный момент команды, управляющие ролевыми командами:\n1. Дарки, создай рп команду <название>\n2. Дарки, удали рп команду <название>\n3. Дарки, установи рп действие')
