@@ -490,6 +490,11 @@ while True:
 				messageText = event.obj.message['text']
 				rpId = event.chat_id
 				try:
+					os.mkdir(rpPath + '/' + str(rpId))
+					os.mkdir(nickPath + '/' + str(rpId))
+				except:
+					pass
+				try:
 					with open(pathMess + '/' + str(event.chat_id) + '.ini', 'a') as messWrite:
 						messWrite.write(' ' + messageText)
 						messWrite.close()
