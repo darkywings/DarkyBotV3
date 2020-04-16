@@ -59,8 +59,10 @@ def init_message_from_user(message): #определяет сообщения о
 	global outMess
 	if message.startswith('Привет, Дарки') or message.startswith('Преет, Дарки') or message.startswith('Преет Дарки') or message.startswith('Привет Дарки') or message.startswith('Привки, Дарки') or message.startswith('Здрасте, Дарки') or message.startswith('Здравствуй, Дарки') or message.startswith('Здравствуйте, Дарки') or message.startswith('Преть, Дарки') or message.startswith('Привки Дарки') or message.startswith('Здрасте Дарки') or message.startswith('Здравствуй Дарки') or message.startswith('Здравствуйте Дарки') or message.startswith('Преть Дарки') or message.startswith('Здрастете, Дарки') or message.startswith('Здрастете Дарки') or message.startswith('Ку Дарки') or message.startswith('Ку, Дарки') or message.startswith('Куку Дарки') or message.startswith('Куку, Дарки') or message.startswith('Прувет, Дарки') or message.startswith('Прувет Дарки') or message.startswith('Прив Дарки'):
 		print('user:', event.user_id, ':', event.text)
-		send_message_to_user('Преть')
-	elif message.startswith("Дарки, голос") or message.startswith("Дарки голос"):
+		hiMessage = ['Преть', 'Привет']
+		hiRand = random.randint(0, len(hiMessage))
+		send_message_to_user(hiMessage[hiRand - 1])
+	if message.startswith("Дарки, голос") or message.startswith("Дарки голос"):
 		print('user:', event.user_id, ':', event.text)
 		randSendLen = random.randint(2, 15)
 		with open(pathMess + '/' + str(event.user_id) + '.ini') as messRead:
@@ -77,13 +79,13 @@ def init_message_from_user(message): #определяет сообщения о
 		send_message_to_user(outMess)
 		i = 0
 		outMess = ''
-	elif message.startswith("Дарки, сброс собранных данных") or message.startswith("Дарки сброс собранных данных"):
+	if message.startswith("Дарки, сброс собранных данных") or message.startswith("Дарки сброс собранных данных"):
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Очищаю собранные данные об этом диалоге...')
 		with open(pathMess + '/' + str(event.user_id) + '.ini', 'w') as messEarse:
 			messEarse.close()
 		send_message_to_user('Данные очищены')
-	elif message.startswith("Дарки, размер собранных данных") or message.startswith("Дарки размер собранных данных"):
+	if message.startswith("Дарки, размер собранных данных") or message.startswith("Дарки размер собранных данных"):
 		sizePath = pathMess + '/' + str(event.user_id) + '.ini'
 		fSize = os.path.getsize(sizePath)
 		sizeType = 0
@@ -100,7 +102,7 @@ def init_message_from_user(message): #определяет сообщения о
 			sizeTypeStr = 'ГБ'
 		fSize = round(fSize, 2)
 		send_message_to_user('Размер собранных данных об этом диалоге составляет: ' + str(fSize) + ' ' + sizeTypeStr)
-	elif message.startswith("Дарки выбери") or message.startswith("Дарки, выбери"):
+	if message.startswith("Дарки выбери") or message.startswith("Дарки, выбери"):
 		print('user:', event.user_id, ':', event.text)
 		choosingMess = event.text
 		if message.startswith("Дарки выбери"):
@@ -114,7 +116,7 @@ def init_message_from_user(message): #определяет сообщения о
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
 		send_message_to_user('Я выбираю ' + chooseResult)
-	elif message.startswith('Дарки, вероятность') or message.startswith('Дарки вероятность'):
+	if message.startswith('Дарки, вероятность') or message.startswith('Дарки вероятность'):
 		print('user:', event.user_id, ':', event.text)
 		probabilityMess = event.text
 		if message.startswith('Дарки, вероятность'):
@@ -125,7 +127,7 @@ def init_message_from_user(message): #определяет сообщения о
 		probabilityRandom = random.randint(0, 100)
 		probabilityResult = str(probabilityRandom) + '%'
 		send_message_to_user('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
-	elif message.startswith('Дарки, попытка') or message.startswith('Дарки попытка'):
+	if message.startswith('Дарки, попытка') or message.startswith('Дарки попытка'):
 		print('user:', event.user_id, ':', event.text)
 		tryMess = event.text
 		if message.startswith('Дарки, попытка'):
@@ -138,7 +140,7 @@ def init_message_from_user(message): #определяет сообщения о
 			send_message_to_user('Попытка' + tryStr + ' вышла неудачной')
 		if tryRandom == 1:
 			send_message_to_user('Попытка' + tryStr + ' вышла удачной')
-	elif "расскажи о себе" in event.text or "Расскажи о себе" in event.text:
+	if message.startswith('Дарки, расскажи о себе') or message.startswith('Дарки расскажи о себе'):
 		print('user:', event.user_id, ':', event.text)
 		if cvExist == 1:
 			with open(pathCV) as fileCV:
@@ -146,7 +148,7 @@ def init_message_from_user(message): #определяет сообщения о
 			send_message_to_user(curVer)
 		else:
 			send_message_to_user('К сожалению мне не удалось найти файл с помощью которого я бы с радостью рассказала вам о себе')
-	elif "История обновлений" in event.text or "история обновлений" in event.text:
+	if message.startswith('Дарки, история обновлений') or message.startswith('Дарки история обновлений'):
 		print('user:', event.user_id, ':', event.text)
 		if uhExist == 1:
 			with open(pathUH) as fileUH:
@@ -154,23 +156,28 @@ def init_message_from_user(message): #определяет сообщения о
 			send_message_to_user(updHyst)
 		else:
 			send_message_to_user('К сожалению мне не удалось найти файл в котором содержалась история обновлений')
-	elif "Помощь" in event.text or "помощь" in event.text:
+	if message.startswith('Дарки, помощь') or message.startswith('Дарки помощь'):
 		print('user:', event.user_id, ':', event.text)
-		send_message_to_user('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Команды"')
-	elif "Команды" in event.text or "команды" in event.text:
+		send_message_to_user('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Дарки, расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Дарки, команды"')
+	if message.startswith('Дарки, команды') or message.startswith('Дарки команды'):
 		print('user:', event.user_id, ':', event.text)
-		send_message_to_user('Доступные на данный момент команды:\n1. Привет\n2. Расскажи о себе\n3. История обновлений\n4. Помощь\n5. Дарки выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки, голос\n9. Дарки, сброс собранных данных')
-	elif "test" in event.text or "тест" in event.text or "Тест" in event.text or "Test" in event.text:
+		send_message_to_user('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Дарки, расскажи о себе\n3. Дарки, история обновлений\n4. Дарки, помощь\n5. Дарки выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки, голос\n9. Дарки, сброс собранных данных\n10. Спокойной ночи')
+	if "test" in event.text or "тест" in event.text or "Тест" in event.text or "Test" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		if "test2310" in event.text or "тест2310" in event.text or "Тест2310" in event.text or "Test2310" in event.text:
 			send_message_to_user("Вы получили секрет! Ссылка на тестовый сервер")
 			send_message_to_user("Вот ваша ссылка: https://vk.me/join/AJQ1d7SbHhdQs8BxnX7faLXp")
 		else:
 			send_message_to_user('Вы почти у цели, введите вдобавок к "тест/test" дату рождения моего создателя в формате ДДММ\nПример:тест0206')
-	elif "Дарки" in event.text and not "запустись" in event.text and not "перезапустись" in event.text and not "выключись" in event.text and not "проверь наличие своих файлов" in event.text and not "обновись" in event.text and not "обнови главный скрипт" in event.text:
+	if "Спокойной ночи" in message or "спокойной ночи" in message or "споки" in message or "Споки" in message or "споки" in message or "Споки" in message:
+		print('user:', event.user_id, ':', event.text)
+		sleepMessage = ['Споки', 'Добрых снов', 'Спокойной', 'Спокойной ночи', 'Ночки', 'Сладких снов']
+		sleepRand = random.randint(0, len(sleepMessage))
+		send_message_to_user(sleepMessage[sleepRand - 1]
+	if "Дарки" in event.text and not "запустись" in event.text and not "перезапустись" in event.text and not "выключись" in event.text and not "проверь наличие своих файлов" in event.text and not "обновись" in event.text and not "обнови главный скрипт" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Я к вашим услугам')
-	elif "Дурки" in event.text:
+	if "Дурки" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Обидно ;с')
 
@@ -193,4 +200,4 @@ while True:
 				init_message_from_user(event.text)
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
         requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
-		print('<<timeout>>')
+		pass
