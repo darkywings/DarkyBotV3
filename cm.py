@@ -366,7 +366,7 @@ def init_message_from_chat(message):#определение сообщения �
 		print('chat:', event.chat_id, ':', message)
 		sleepMessage = ['Споки', 'Добрых снов', 'Спокойной', 'Спокойной ночи', 'Ночки', 'Сладких снов']
 		sleepRand = random.randint(0, len(sleepMessage))
-		send_message_to_chat(sleepMessage[sleepRand - 1]
+		send_message_to_chat(sleepMessage[sleepRand - 1])
 	elif message.startswith('Дарки, расскажи о себе') or message.startswith('Дарки расскажи о себе'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		with open(pathCV) as file:
