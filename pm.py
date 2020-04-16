@@ -173,7 +173,7 @@ def init_message_from_user(message): #определяет сообщения о
 		print('user:', event.user_id, ':', event.text)
 		sleepMessage = ['Споки', 'Добрых снов', 'Спокойной', 'Спокойной ночи', 'Ночки', 'Сладких снов']
 		sleepRand = random.randint(0, len(sleepMessage))
-		send_message_to_user(sleepMessage[sleepRand - 1]
+		send_message_to_user(sleepMessage[sleepRand - 1])
 	elif "Дарки" in event.text and not "запустись" in event.text and not "перезапустись" in event.text and not "выключись" in event.text and not "проверь наличие своих файлов" in event.text and not "обновись" in event.text and not "обнови главный скрипт" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		send_message_to_user('Я к вашим услугам')
