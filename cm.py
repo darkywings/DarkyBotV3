@@ -288,7 +288,6 @@ def init_message_from_chat(message):#определение сообщения �
 		nicknameNew = nicknameNew.lstrip('ник ')
 		nicknameNew = nicknameNew.lstrip('на')
 		nicknameNew = nicknameNew.lstrip(' ')
-		print(nicknameNew)
 		try:
 			os.mkdir(nickPath + '/' + str(rpId))
 		except:
