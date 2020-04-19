@@ -54,6 +54,21 @@ def send_message_to_user(message):
 		message=message
 	)
 
+def distortMessage(distortMess):
+	distortMessageOut = ''
+	distortMessageInt = 0
+	distortMessageSymbols = ['█', '▒', '□', '?', '⊠', '✖']
+	distortMessageLen = len(distortMess)
+	while not distortMessageInt == distortMessageLen:
+		distortRandomSymbol = random.randint(1, 20)
+		if distortRandomSymbol < 7:
+			distortMessageOut = distortMessageOut + distortMessageSymbols[distortRandomSymbol - 1]
+			distortMessageInt = distortMessageInt + 1
+		else:
+			distortMessageOut = distortMessageOut + distortMess[distortMessageInt]
+			distortMessageInt = distortMessageInt + 1
+	send_message_to_user(distortMessageOut)
+
 def init_message_from_user(message): #определяет сообщения от пользователя
 	global i
 	global outMess
@@ -103,8 +118,8 @@ def init_message_from_user(message): #определяет сообщения о
 		fSize = round(fSize, 2)
 		send_message_to_user('Размер собранных данных об этом диалоге составляет: ' + str(fSize) + ' ' + sizeTypeStr)
 	elif message.startswith("Дарки выбери") or message.startswith("Дарки, выбери"):
-		print('user:', event.user_id, ':', event.text)
-		choosingMess = event.text
+		print('user:', event.user_id, ':', message)
+		choosingMess = message
 		if message.startswith("Дарки выбери"):
 			chooseStr = choosingMess.lstrip('Дарки ')
 		if message.startswith("Дарки, выбери"):
@@ -115,10 +130,13 @@ def init_message_from_user(message): #определяет сообщения о
 		chooseListLen = len(chooseList)
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
-		send_message_to_user('Я выбираю ' + chooseResult)
+		if chooseListLen > 1:
+			send_message_to_user('Я выбираю ' + chooseResult)
+		else:
+			send_message_to_user('Я не могу выбрать что-либо поскольку мне дали один вариант ответа, либо мне не дали варианты ответа вообще')
 	elif message.startswith('Дарки, вероятность') or message.startswith('Дарки вероятность'):
-		print('user:', event.user_id, ':', event.text)
-		probabilityMess = event.text
+		print('user:', event.user_id, ':', message)
+		probabilityMess = message
 		if message.startswith('Дарки, вероятность'):
 			probabilityStr = probabilityMess.lstrip('Дарки, ')
 		if message.startswith('Дарки вероятность'):
@@ -126,20 +144,43 @@ def init_message_from_user(message): #определяет сообщения о
 		probabilityStr = probabilityStr.lstrip('вероятность')
 		probabilityRandom = random.randint(0, 100)
 		probabilityResult = str(probabilityRandom) + '%'
-		send_message_to_user('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
+		if not probabilityStr == '':
+			send_message_to_user('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
+		else:
+			send_message_to_user('Не могу просчитать вероятность, пожалуйста введите предложение после "Дарки, вероятность"')
 	elif message.startswith('Дарки, попытка') or message.startswith('Дарки попытка'):
-		print('user:', event.user_id, ':', event.text)
-		tryMess = event.text
+		print('user:', event.user_id, ':', message)
+		tryMess = message
 		if message.startswith('Дарки, попытка'):
 			tryStr = tryMess.lstrip('Дарки, ')
 		if message.startswith('Дарки попытка'):
 			tryStr = tryMess.lstrip('Дарки ')
 		tryStr = tryStr.lstrip('попытка')
 		tryRandom = random.randint(0, 1)
-		if tryRandom == 0:
+		if tryRandom == 0 and not tryStr == '':
 			send_message_to_user('Попытка' + tryStr + ' вышла неудачной')
-		if tryRandom == 1:
+		elif tryRandom == 1 and not tryStr == '':
 			send_message_to_user('Попытка' + tryStr + ' вышла удачной')
+		else:
+			send_message_to_user('Пожалуйста укажите действие, дабы я решила, было ли оно удачным или же наоборот')
+	elif message.startswith('Дарки, искази текст: ') or message.startswith('Дарки искази текст: '):
+		print('user:', event.user_id, ':', message)
+		if message.startswith('Дарки, '):
+			distortMess = message.lstrip('Дарки, ')
+		if message.startswith('Дарки '):
+			distortMess = message.lstrip('Дарки ')
+		distortMess = distortMess.lstrip('искази ')
+		distortMess = distortMess.lstrip('текст: ')
+		distortMess = list(distortMess)
+		distortMessage(distortMess)
+	elif message.startswith('Дарки, скажи') or message.startswith('Дарки скажи'):
+		print('user:', event.user_id, ':', message)
+		if message.startswith('Дарки, '):
+			repeatMess = message.lstrip('Дарки, ')
+		if message.startswith('Дарки '):
+			repeatMess = message.lstrip('Дарки ')
+		repeatMess = repeatMess.lstrip('скажи ')
+		send_message_to_user(repeatMess)
 	elif message.startswith('Дарки, расскажи о себе') or message.startswith('Дарки расскажи о себе'):
 		print('user:', event.user_id, ':', event.text)
 		if cvExist == 1:
@@ -161,7 +202,7 @@ def init_message_from_user(message): #определяет сообщения о
 		send_message_to_user('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Дарки, расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Дарки, команды"')
 	elif message.startswith('Дарки, команды') or message.startswith('Дарки команды'):
 		print('user:', event.user_id, ':', event.text)
-		send_message_to_user('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Дарки, расскажи о себе\n3. Дарки, история обновлений\n4. Дарки, помощь\n5. Дарки выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки, голос\n9. Дарки, сброс собранных данных\n10. Спокойной ночи')
+		send_message_to_user('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Дарки, расскажи о себе\n3. Дарки, история обновлений\n4. Дарки, помощь\n5. Дарки выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки, голос\n9. Дарки, сброс собранных данных\n10. Спокойной ночи\n11. Дарки, искази текст: <текст>\n12. Дарки, скажи <текст>')
 	elif "test" in event.text or "тест" in event.text or "Тест" in event.text or "Test" in event.text:
 		print('user:', event.user_id, ':', event.text)
 		if "test2310" in event.text or "тест2310" in event.text or "Тест2310" in event.text or "Test2310" in event.text:
