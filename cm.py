@@ -169,6 +169,21 @@ def roleplayCommands(message):
 			pass
 	except:
 		pass
+		
+def distortMessage(distortMess):
+	distortMessageOut = ''
+	distortMessageInt = 0
+	distortMessageSymbols = ['█', '▒', '□', '?', '⊠', '✖']
+	distortMessageLen = len(distortMess)
+	while not distortMessageInt == distortMessageLen:
+		distortRandomSymbol = random.randint(1, 20)
+		if distortRandomSymbol < 7:
+			distortMessageOut = distortMessageOut + distortMessageSymbols[distortRandomSymbol - 1]
+			distortMessageInt = distortMessageInt + 1
+		else:
+			distortMessageOut = distortMessageOut + distortMess[distortMessageInt]
+			distortMessageInt = distortMessageInt + 1
+	send_message_to_chat(distortMessageOut)
     
 def init_message_from_chat(message):#определение сообщения из беседы
 	global i
@@ -288,6 +303,7 @@ def init_message_from_chat(message):#определение сообщения �
 		nicknameNew = nicknameNew.lstrip('ник ')
 		nicknameNew = nicknameNew.lstrip('на')
 		nicknameNew = nicknameNew.lstrip(' ')
+		print(nicknameNew)
 		try:
 			os.mkdir(nickPath + '/' + str(rpId))
 		except:
@@ -387,7 +403,7 @@ def init_message_from_chat(message):#определение сообщения �
 		send_message_to_chat('Раз вы вызвали помощь, значит вам нужна помощь, а значит я могу помочь^^\nЕсли вы хотите узнать кто я - введите "Дарки, расскажи о себе"\nЕсли вы хотите узнать мои команды - введите "Дарки, команды"')
 	elif message.startswith('Дарки, команды') or message.startswith('Дарки команды'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
-		send_message_to_chat('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Дарки, расскажи о себе\n3. Дарки, история обновлений\n4. Дарки, помощь\n5. Дарки, выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки, голос\n9. Дарки, сброс собранных данных\n10. Дарки, команды управления рп командами\n11. Дарки, установи мой ник на <никнейм>\n12. Дарки, удали мой никнейм\n13. Дарки, перечисли рп команды\n14. Дарки, перечисли никнеймы\n15. Спокойной ночи')
+		send_message_to_chat('Доступные на данный момент команды:\n1. Привет, Дарки\n2. Дарки, расскажи о себе\n3. Дарки, история обновлений\n4. Дарки, помощь\n5. Дарки, выбери <варианты через или>\n6. Дарки, вероятность <предложение>\n7. Дарки, попытка <действие>\n8. Дарки, голос\n9. Дарки, сброс собранных данных\n10. Дарки, команды управления рп командами\n11. Дарки, установи мой ник на <никнейм>\n12. Дарки, удали мой никнейм\n13. Дарки, перечисли рп команды\n14. Дарки, перечисли никнеймы\n15. Спокойной ночи\n16. Дарки, искази текст: <текст>\n17. Дарки, скажи <текст>')
 	elif "test" in event.obj.message['text'] or "тест" in event.obj.message['text'] or "Тест" in event.obj.message['text'] or "Test" in event.obj.message['text']:
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		if "test2310" in event.obj.message['text'] or "тест2310" in event.obj.message['text'] or "Тест2310" in event.obj.message['text'] or "Test2310" in event.obj.message['text']:
@@ -408,7 +424,10 @@ def init_message_from_chat(message):#определение сообщения �
 		chooseListLen = len(chooseList)
 		chooseRandInt = random.randint(0, chooseListLen)
 		chooseResult = chooseList[chooseRandInt - 1]
-		send_message_to_chat('Я выбираю ' + chooseResult)
+		if chooseListLen > 1:
+			send_message_to_chat('Я выбираю ' + chooseResult)
+		else:
+			send_message_to_chat('Я не могу выбрать что-либо поскольку мне дали один вариант ответа, либо мне не дали варианты ответа вообще')
 	elif message.startswith('Дарки, вероятность') or message.startswith('Дарки вероятность'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		probabilityMess = event.obj.message['text']
@@ -419,7 +438,10 @@ def init_message_from_chat(message):#определение сообщения �
 		probabilityStr = probabilityStr.lstrip('вероятность')
 		probabilityRandom = random.randint(0, 100)
 		probabilityResult = str(probabilityRandom) + '%'
-		send_message_to_chat('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
+		if not probabilityStr == '':
+			send_message_to_chat('Вероятность того, что' + probabilityStr + ' составляет ' + probabilityResult)
+		else:
+			send_message_to_chat('Не могу просчитать вероятность, пожалуйста введите предложение после "Дарки, вероятность"')
 	elif message.startswith('Дарки, попытка') or message.startswith('Дарки попытка'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		tryMess = event.obj.message['text']
@@ -429,10 +451,30 @@ def init_message_from_chat(message):#определение сообщения �
 			tryStr = tryMess.lstrip('Дарки ')
 		tryStr = tryStr.lstrip('попытка')
 		tryRandom = random.randint(0, 1)
-		if tryRandom == 0:
+		if tryRandom == 0 and not tryStr == '':
 			send_message_to_chat('Попытка' + tryStr + ' вышла неудачной')
-		if tryRandom == 1:
+		elif tryRandom == 1 and not tryStr == '':
 			send_message_to_chat('Попытка' + tryStr + ' вышла удачной')
+		else:
+			send_message_to_chat('Пожалуйста укажите действие, дабы я решила, было ли оно удачным или же наоборот')
+	elif message.startswith('Дарки, искази текст: ') or message.startswith('Дарки искази текст: '):
+		print('chat:', event.chat_id, ':', message)
+		if message.startswith('Дарки, '):
+			distortMess = message.lstrip('Дарки, ')
+		if message.startswith('Дарки '):
+			distortMess = message.lstrip('Дарки ')
+		distortMess = distortMess.lstrip('искази ')
+		distortMess = distortMess.lstrip('текст: ')
+		distortMess = list(distortMess)
+		distortMessage(distortMess)
+	elif message.startswith('Дарки, скажи') or message.startswith('Дарки скажи'):
+		print('chat:', event.chat_id, ':', message)
+		if message.startswith('Дарки, '):
+			repeatMess = message.lstrip('Дарки, ')
+		if message.startswith('Дарки '):
+			repeatMess = message.lstrip('Дарки ')
+		repeatMess = repeatMess.lstrip('скажи ')
+		send_message_to_chat(repeatMess)
 	elif message.startswith('Дарки запустись') or message.startswith('Дарки. запустись') or message.startswith('Дарки перезапустись') or message.startswith('Дарки. перезапустись') or message.startswith('Дарки выключись') or message.startswith('Дарки. выключись') or message.startswith('Дарки проверь наличие своих файлов') or message.startswith('Дарки. проверь наличие своих файлов') or message.startswith('Дарки обновись') or message.startswith('Дарки. обновись')  or message.startswith('Дарки обнови главный скрипт') or message.startswith('Дарки. обнови главный скрипт'):
 		print('chat:', event.chat_id, ':', event.obj.message['text'])
 		send_message_to_chat('Данная команда не работает в беседе')
