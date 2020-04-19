@@ -347,4 +347,4 @@ while True:
   		      init_message_from_user(event.text)
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout,
         requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
-		print('<<timeout>>')
+		pass
