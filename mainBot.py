@@ -28,6 +28,7 @@ urlCurVer = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/curVer
 urlUpdHyst = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/updHyst.ini'
 urlDB = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/darkyBot.py'
 urlMB = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/mainBot.py'
+urlCmdList = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/commandList.ini'
 
 print('Инициализация команд...')
 
