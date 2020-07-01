@@ -92,7 +92,7 @@ def init_message_from_user(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 0:
 				print('start up...')
@@ -155,7 +155,7 @@ def init_message_from_user(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
 				print('turn off...')
@@ -187,7 +187,7 @@ def init_message_from_user(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
 				crash = 0
@@ -251,7 +251,7 @@ def init_message_from_user(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
 				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
@@ -349,7 +349,7 @@ def init_message_from_user(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			diagnosticsTimer = time.time()
 			send_message_to_user('Диагностика запущена, пожалуйста подождите...')
@@ -424,7 +424,7 @@ def init_message_from_user(message): #функция отвечающая за �
 		else:
 			send_message_to_user('⛔В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message.startswith('Дарки, обнови главный скрипт') or message.startswith('Дарки обнови главный скрипт'):
-		print('user:', event.user_id, ':', event.text)
+		print('id:', event.obj.message['from_id'], ':', message)
 		if event.user_id == 507365405:
 			if mode == 1:
 				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
@@ -466,7 +466,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 0:
 				print('start up...')
@@ -529,7 +529,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
 				print('turn off...')
@@ -561,7 +561,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
 				crash = 0
@@ -625,7 +625,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
 				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
@@ -724,7 +724,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 			auids = adminUsersIds.read()
 			adminUsersIds.close()
 		auids = auids.split('-')
-		print('user:', event.obj.message['from_id'], ':', message)
+		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			diagnosticsTimer = time.time()
 			send_message_to_chat('Диагностика запущена, пожалуйста подождите...')
@@ -799,7 +799,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 		else:
 			send_message_to_chat('⛔В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message.startswith('Дарки, обнови главный скрипт') or message.startswith('Дарки обнови главный скрипт'):
-		print('user:', event.user_id, ':', event.text)
+		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if event.user_id == 507365405:
 			if mode == 1:
 				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
