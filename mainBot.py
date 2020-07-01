@@ -280,6 +280,11 @@ def init_message_from_user(message): #функция отвечающая за �
 				wget.download(urlUpdHyst, pathUH)
 			except:
 				send_message_to_user('⚠️При обновлении "updHyst.ini" произошла ошибка')
+			try:
+				os.remove(pathCL)
+				wget.download(urlCmdList, pathCL)
+			except:
+				send_message_to_user('⚠️При обновлении "commandList.ini" произошла ошибка')
 			send_message_to_user('Перезапись путей к обновлённым файлам...')
 			darkyBotFileExist = 0
 			checkFileExist('*darkyBot.py', os.getcwd())
@@ -292,6 +297,9 @@ def init_message_from_user(message): #функция отвечающая за �
 			checkFileExist('*updHyst.ini', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathUH = neededFoundedFiles[0]
+			checkFileExist('*commandList.ini', os.getcwd())
+			if len(neededFoundedFiles) > 0:
+				pathCL = neededFoundedFiles[0]
 			send_message_to_user('Обновление завершено')
 			send_message_to_user('Запускаюсь...')
 			try:
@@ -646,6 +654,12 @@ def init_message_from_chat(message): #функция отвечающая за �
 				wget.download(urlUpdHyst, pathUH)
 			except:
 				send_message_to_chat('⚠️При обновлении "updHyst.ini" произошла ошибка')
+			print('updating "commandList.ini"...')
+			try:
+				os.remove(pathCL)
+				wget.download(urlCmdList, pathCL)
+			except:
+				send_message_to_chat('⚠️При обновлении "commandList.ini" произошла ошибка')
 			send_message_to_chat('Перезапись путей к обновлённым файлам...')
 			darkyBotFileExist = 0
 			checkFileExist('*darkyBot.py', os.getcwd())
@@ -658,6 +672,9 @@ def init_message_from_chat(message): #функция отвечающая за �
 			checkFileExist('*updHyst.ini', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathUH = neededFoundedFiles[0]
+			checkFileExist('*commandList.ini', os.getcwd())
+			if len(neededFoundedFiles) > 0:
+				pathCL = neededFoundedFiles[0]
 			send_message_to_chat('Обновление завершено')
 			send_message_to_chat('Запускаюсь...')
 			try:
@@ -844,6 +861,12 @@ if len(neededFoundedFiles) > 0:
 	print(pathUH + ' - founded')
 else:
 	print('file "updHyst.ini" not found!')
+checkFileExist('*commandList.ini', os.getcwd())
+if len(neededFoundedFiles) > 0:
+	pathCL = neededFoundedFiles[0]
+	print(pathCL + ' - founded')
+else:
+	print('file "commandList.ini" not found!')
 
 print('Всё готово(' + currentVersion + ')')
 while True:
