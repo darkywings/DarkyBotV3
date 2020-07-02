@@ -1,5 +1,5 @@
 print('Инициализация текущей версии...')
-currentVersion = '3.0.0'
+currentVersion = '3.0.1'
 
 print('Импорт модулей...')
 from vk_api.utils import get_random_id
