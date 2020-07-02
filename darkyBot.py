@@ -1,5 +1,5 @@
 print('Инициализация текущей версии...')
-currentVersion = '3.0.0'
+currentVersion = '3.0.1'
 
 print('Импорт модулей...')
 from vk_api.utils import get_random_id
@@ -2991,7 +2991,7 @@ while True:
 		for event in botlongpoll.listen(): #своеобразное прослушивание новых событий
 			adminStatus = 0
 			userIsBanned = False
-			randGrAKUpd = random.randint(0, 10)
+			randGrAKUpd = random.randint(0, 20)
 			if randGrAKUpd == 1:
 				print('Обновление ключей доступа в приветствиях...')
 				updateAccssKeysInGreetings()
@@ -3072,7 +3072,7 @@ while True:
 						messWrite.close()
 				init_message_from_user(event.obj.message['text'], event.obj.message['from_id'])
 	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout, requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
-		randGrAKUpd = random.randint(0, 10)
+		randGrAKUpd = random.randint(0, 20)
 		if randGrAKUpd == 1:
 			print('Обновление ключей доступа в приветствиях...')
 			updateAccssKeysInGreetings()
