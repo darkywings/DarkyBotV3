@@ -426,7 +426,15 @@ def init_message_from_user(message): #функция отвечающая за �
 			send_message_to_user('⛔В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message.startswith('Дарки, обнови главный скрипт') or message.startswith('Дарки обнови главный скрипт'):
 		print('id:', event.obj.message['from_id'], ':', message)
-		if event.user_id == 507365405:
+		checkFileExist('*adminUsers.ini', os.getcwd())
+		if not len(neededFoundedFiles) == 0:
+			pathAU = neededFoundedFiles[0]
+		with open(pathAU, 'r') as adminUsersIds:
+			auids = adminUsersIds.read()
+			adminUsersIds.close()
+		auids = auids.split('-')
+		print('id:', event.obj.message['from_id'], ':', message)
+		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
 				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
 			else:
