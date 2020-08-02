@@ -914,7 +914,7 @@ else:
 print('Получение информации о текущей версии...')
 try:
 	from version import versionName as currentVersion
-except FileNotFoundError:
+except ModuleNotFoundError, FileNotFoundError:
 	wget.download(urlVer, pathMB.rstrip('mainBot.py') + 'version.py')
 	from version import versionName as currentVersion
 
