@@ -1,6 +1,3 @@
-print('Инициализация текущей версии...')
-currentVersion = '3.0.1'
-
 print('Импорт модулей...')
 from vk_api.utils import get_random_id
 import sys
@@ -29,6 +26,7 @@ urlUpdHyst = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/updHy
 urlDB = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/darkyBot.py'
 urlMB = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/mainBot.py'
 urlCmdList = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/commandList.ini'
+urlVer = 'https://raw.githubusercontent.com/skanim-sdw/DarkyBot/master/version.py'
 
 print('Инициализация команд...')
 
@@ -37,6 +35,7 @@ turnOffCommand = ['Дарки, выключись', 'Дарки выключис
 restartCommand = ['Дарки, перезапустись', 'Дарки перезапустись', '/darky_restart']
 updateCommand = ['Дарки, обновись', 'Дарки обновись', '/darky_update']
 diagnosticsCommand = ['Дарки, диагностика', 'Дарки диагностика', 'Дарки, запусти диагностику', 'Дарки запусти диагностику', '/darky_diagnostics']
+updateMainScrtiptCommand = ['Дарки, обнови главный скрипт', 'Дарки обнови главный скрипт', '/darky_updateMainScript']
 
 print('Загрузка классов...')
 
@@ -44,6 +43,16 @@ class StartUpTimeout:
 	print('StartUpTimeout')
 
 print('Загрузка функций...')
+
+def getTraceback(): #формирование трейсбека и отправка сообщением
+	exc_type, exc_value, exc_traceback = sys.exc_info()
+	tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
+	tbOut = ''
+	c = 0
+	while c < len(tbObject):
+		tbOut = tbOut + tbObject[c] + '\n\n'
+		c = c + 1
+	return tbOut
 
 def send_message_to_user(message): #функция отвечающая за отправку сообщений пользователю
 	vk.messages.send(user_id = event.obj.message['from_id'], random_id = get_random_id(), message = message)
@@ -82,6 +91,7 @@ def init_message_from_user(message): #функция отвечающая за �
 	global pathCV
 	global pathAU
 	global pathUH
+	global pathCL
 	global darkyBotFileExist
 	global darkyBotMode
 	global diagnosticsStarts
@@ -97,7 +107,10 @@ def init_message_from_user(message): #функция отвечающая за �
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 0:
 				print('start up...')
-				send_message_to_user('Запускаюсь...')
+				if diagnosticsStarts == False:
+					send_message_to_user('Запускаюсь...')
+				else:
+					send_message_to_user('Запуск диагностики скрипта...')
 				startUpTimerBegin = time.time()
 				darkyBotMode = 0
 				print('starting "darkyBot.py"...')
@@ -122,14 +135,7 @@ def init_message_from_user(message): #функция отвечающая за �
 							except:
 								pass
 					except:
-						exc_type, exc_value, exc_traceback = sys.exc_info()
-						tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-						tbOut = ''
-						n = 0
-						while n < len(tbObject):
-							tbOut = tbOut + tbObject[n] + '\n\n'
-							n = n + 1
-						send_message_to_user('⚠️Не удалось запустить скрипт "darkyBot.py"\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut)
+						send_message_to_user('⚠️Не удалось запустить скрипт "darkyBot.py"\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback())
 					if darkyBotMode == 1 and diagnosticsStarts == 0:
 						mode = 1
 						startUpTimerEnd = time.time()
@@ -138,7 +144,7 @@ def init_message_from_user(message): #функция отвечающая за �
 						send_message_to_user('✅Я готова к работе\nПрошло: ' + str(startUpTime) + ' сек.')
 					elif darkyBotMode == 1 and diagnosticsStarts == 1:
 						mode = 1
-						send_message_to_user('Скрипт запущен. Частичная проверка работоспособности...')
+						send_message_to_user('Скрипт запущен. Выявление команд способные вывести меня из строя...')
 					else:
 						send_message_to_user('❌Скрипт "darkyBot.py" не запустился, возможно в нём произошла ошибка')
 				else:
@@ -167,14 +173,7 @@ def init_message_from_user(message): #функция отвечающая за �
 					darkyBotMode = 0
 					send_message_to_user('✅Выключение завершено')
 				except:
-					exc_type, exc_value, exc_traceback = sys.exc_info()
-					tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-					tbOut = ''
-					n = 0
-					while n < len(tbObject):
-						tbOut = tbOut + tbObject[n] + '\n\n'
-						n = n + 1
-					send_message_to_user('⚠️Выключение не было завершено из-за ошибки в коде\n\nДополнительная информация:\n- - -n' + tbOut)
+					send_message_to_user('⚠️Выключение не было завершено из-за ошибки в коде\n\nДополнительная информация:\n- - -n' + getTraceback())
 			else:
 				send_message_to_user('⚠️Я не могу выключиться если я не запущена')
 		else:
@@ -218,14 +217,7 @@ def init_message_from_user(message): #функция отвечающая за �
 						except:
 							pass
 				except:
-					exc_type, exc_value, exc_traceback = sys.exc_info()
-					tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-					tbOut = ''
-					n = 0
-					while n < len(tbObject):
-						tbOut = tbOut + tbObject[n] + '\n\n'
-						n = n + 1
-					send_message_to_user('⚠️При перезапуске произошла ошибка, осуществляю принудительное выключение...\n\nДополнительная информация:\n- - -\n' + tbOut)
+					send_message_to_user('⚠️При перезапуске произошла ошибка, осуществляю принудительное выключение...\n\nДополнительная информация:\n- - -\n' + getTraceback())
 					os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
 					pathRestart = pathMB.rstrip('mainBot.py') + 'startUp.ini'
 					os.remove(pathRestart)
@@ -255,9 +247,10 @@ def init_message_from_user(message): #функция отвечающая за �
 		print('id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
+				darkyIsTurnedOn = True
 				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
 			else:
-				pass
+				darkyIsTurnedOn = False
 			print('updating...')
 			send_message_to_user('Обновляюсь, пожалуйста подождите...')
 			updateTimerBegin = time.time()
@@ -267,25 +260,36 @@ def init_message_from_user(message): #функция отвечающая за �
 			try:
 				os.remove(pathDB)
 				wget.download(urlDB, pathDB)
+				print()
 			except:
 				send_message_to_user('⚠️При обновлении "darkyBot.py" произошла ошибка')
 			print('updating "curVer.ini"...')
 			try:
 				os.remove(pathCV)
 				wget.download(urlCurVer, pathCV)
+				print()
 			except:
 				send_message_to_user('⚠️При обновлении "curVer.ini" произошла ошибка')
 			print('updating "updHyst.ini"...')
 			try:
 				os.remove(pathUH)
 				wget.download(urlUpdHyst, pathUH)
+				print()
 			except:
 				send_message_to_user('⚠️При обновлении "updHyst.ini" произошла ошибка')
+			print('updating "commandList.ini"...')
 			try:
 				os.remove(pathCL)
 				wget.download(urlCmdList, pathCL)
+				print()
 			except:
 				send_message_to_user('⚠️При обновлении "commandList.ini" произошла ошибка')
+			try:
+				os.remove(pathVer)
+				wget.download(urlVer, pathVer)
+				print()
+			except:
+				send_message_to_user('⚠️При обновлении "version.py" произошла ошибка')
 			send_message_to_user('Перезапись путей к обновлённым файлам...')
 			darkyBotFileExist = 0
 			checkFileExist('*darkyBot.py', os.getcwd())
@@ -301,44 +305,46 @@ def init_message_from_user(message): #функция отвечающая за �
 			checkFileExist('*commandList.ini', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathCL = neededFoundedFiles[0]
+			checkFileExist('*version.py', os.getcwd())
+			if len(neededFoundedFiles) > 0:
+				pathVer = neededFoundedFiles[0]
 			send_message_to_user('Обновление завершено')
-			send_message_to_user('Запускаюсь...')
-			try:
-				darkyBot = subprocess.Popen('python ' + pathDB, shell=True, preexec_fn=os.setsid)
-				darkyBotPID = darkyBot.pid
-				checkFileExist('*startUp.ini', os.getcwd())
-				if len(neededFoundedFiles) > 0:
-					pathSU = neededFoundedFiles[0]
+			if darkyIsTurnedOn == True:
+				send_message_to_user('Запускаюсь...')
 				try:
-					os.remove(pathSU)
-				except:
-					pass
-				while darkyBotMode == 0 and not time.time() - updateTimerBegin > 120:
-					pathStartUp = pathMB.rstrip('mainBot.py') + 'startUp.ini'
+					darkyBot = subprocess.Popen('python ' + pathDB, shell=True, preexec_fn=os.setsid)
+					darkyBotPID = darkyBot.pid
+					checkFileExist('*startUp.ini', os.getcwd())
+					if len(neededFoundedFiles) > 0:
+						pathSU = neededFoundedFiles[0]
 					try:
-						with open(pathMB.rstrip('mainBot.py') + 'startUp.ini') as startUpCheck:
-							startUpCheck.close()
-						os.remove(pathStartUp)
-						darkyBotMode = 1
+						os.remove(pathSU)
 					except:
 						pass
-			except:
-				exc_type, exc_value, exc_traceback = sys.exc_info()
-				tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-				tbOut = ''
-				n = 0
-				while n < len(tbObject):
-					tbOut = tbOut + tbObject[n] + '\n\n'
-					n = n + 1
-				send_message_to_user('⚠️Не удалось запустить скрипт "darkyBot.py"\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut)
-			if darkyBotMode == 1:
-				mode = 1
+					while darkyBotMode == 0 and not time.time() - updateTimerBegin > 120:
+						pathStartUp = pathMB.rstrip('mainBot.py') + 'startUp.ini'
+						try:
+							with open(pathMB.rstrip('mainBot.py') + 'startUp.ini') as startUpCheck:
+								startUpCheck.close()
+							os.remove(pathStartUp)
+							darkyBotMode = 1
+						except:
+							pass
+				except:
+					send_message_to_user('⚠️Не удалось запустить скрипт "darkyBot.py"\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback())
+				if darkyBotMode == 1:
+					mode = 1
+					updateTimerEnd = time.time()
+					updateTime = updateTimerEnd - updateTimerBegin
+					updateTime = round(updateTime, 3)
+					send_message_to_user('✅Я готова к работе\nПрошло: ' + str(updateTime) + ' сек.')
+				else:
+					send_message_to_user('❌Скрипт "darkyBot.py" не запустился, возможно в нём произошла ошибка')
+			else:
 				updateTimerEnd = time.time()
 				updateTime = updateTimerEnd - updateTimerBegin
 				updateTime = round(updateTime, 3)
-				send_message_to_user('✅Я готова к работе\nПрошло: ' + str(updateTime) + ' сек.')
-			else:
-				send_message_to_user('❌Скрипт "darkyBot.py" не запустился, возможно в нём произошла ошибка')
+				send_message_to_user('Прошло: ' + str(updateTime) + ' сек.')
 		else:
 			send_message_to_user('⛔В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message in diagnosticsCommand:
@@ -352,7 +358,14 @@ def init_message_from_user(message): #функция отвечающая за �
 		auids = auids.split('-')
 		print('id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
+			if mode == 1:
+				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
+				mode = 0
 			diagnosticsTimer = time.time()
+			try:
+				os.remove(pathMB.rstrip('mainBot.py') + 'diagnosticsResult.ini')
+			except:
+				pass
 			send_message_to_user('Диагностика запущена, пожалуйста подождите...')
 			diagnosticsLog = 'Файлы:\n'
 			checkFileExist('*mainBot.py', os.getcwd())
@@ -393,7 +406,7 @@ def init_message_from_user(message): #функция отвечающая за �
 				checkWork = False
 				checkWorkTimer = time.time()
 				diagnosticsStarts = 0
-				while checkWork == False and time.time() - checkWorkTimer < 30:
+				while checkWork == False and time.time() - checkWorkTimer < 300:
 					time.sleep(1)
 					try:
 						with open(pathMB.rstrip('mainBot.py') + 'diagnosticsResult.ini') as diagnosticsResult:
@@ -414,17 +427,10 @@ def init_message_from_user(message): #функция отвечающая за �
 				else:
 					send_message_to_user('⚠️Максимальный лимит времени исчерпан\nДиагностика завершена\n\nРезультат диагностики:\n\n' + diagnosticsLog + '\nПрошло: ' + str(round(time.time() - diagnosticsTimer, 3)) + 'сек.')
 			except:
-				exc_type, exc_value, exc_traceback = sys.exc_info()
-				tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-				tbOut = ''
-				n = 0
-				while n < len(tbObject):
-					tbOut = tbOut + tbObject[n] + '\n\n'
-					n = n + 1
-				send_message_to_user('⚠️Не удалось запустить скрипт "darkyBot.py" в режиме диагностики\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut)
+				send_message_to_user('⚠️Не удалось запустить скрипт "darkyBot.py" в режиме диагностики\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback())
 		else:
 			send_message_to_user('⛔В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
-	elif message.startswith('Дарки, обнови главный скрипт') or message.startswith('Дарки обнови главный скрипт'):
+	elif message in updateMainScrtiptCommand:
 		print('id:', event.obj.message['from_id'], ':', message)
 		checkFileExist('*adminUsers.ini', os.getcwd())
 		if not len(neededFoundedFiles) == 0:
@@ -464,6 +470,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 	global pathCV
 	global pathAU
 	global pathUH
+	global pathCL
 	global darkyBotFileExist
 	global darkyBotMode
 	global diagnosticsStarts
@@ -479,7 +486,10 @@ def init_message_from_chat(message): #функция отвечающая за �
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 0:
 				print('start up...')
-				send_message_to_chat('Запускаюсь...')
+				if diagnosticsStarts == False:
+					send_message_to_chat('Запускаюсь...')
+				else:
+					send_message_to_chat('Запуск диагностики скрипта...')
 				startUpTimerBegin = time.time()
 				darkyBotMode = 0
 				print('starting "darkyBot.py"...')
@@ -504,14 +514,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 							except:
 								pass
 					except:
-						exc_type, exc_value, exc_traceback = sys.exc_info()
-						tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-						tbOut = ''
-						n = 0
-						while n < len(tbObject):
-							tbOut = tbOut + tbObject[n] + '\n\n'
-							n = n + 1
-						send_message_to_chat('⚠️Не удалось запустить скрипт "darkyBot.py"\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut)
+						send_message_to_chat('⚠️Не удалось запустить скрипт "darkyBot.py"\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback())
 					if darkyBotMode == 1 and diagnosticsStarts == 0:
 						mode = 1
 						startUpTimerEnd = time.time()
@@ -520,7 +523,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 						send_message_to_chat('✅Я готова к работе\nПрошло: ' + str(startUpTime) + ' сек.')
 					elif darkyBotMode == 1 and diagnosticsStarts == 1:
 						mode = 1
-						send_message_to_chat('Скрипт запущен. Частичная проверка работоспособности...')
+						send_message_to_chat('Скрипт запущен. Выявление команд способные вывести меня из строя...')
 					else:
 						send_message_to_chat('❌Скрипт "darkyBot.py" не запустился, возможно в нём произошла ошибка')
 				else:
@@ -549,14 +552,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 					darkyBotMode = 0
 					send_message_to_chat('✅Выключение завершено')
 				except:
-					exc_type, exc_value, exc_traceback = sys.exc_info()
-					tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-					tbOut = ''
-					n = 0
-					while n < len(tbObject):
-						tbOut = tbOut + tbObject[n] + '\n\n'
-						n = n + 1
-					send_message_to_chat('⚠️Выключение не было завершено из-за ошибки в коде\n\nДополнительная информация:\n- - -n' + tbOut)
+					send_message_to_chat('⚠️Выключение не было завершено из-за ошибки в коде\n\nДополнительная информация:\n- - -n' + getTraceback())
 			else:
 				send_message_to_chat('⚠️Я не могу выключиться если я не запущена')
 		else:
@@ -600,14 +596,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 						except:
 							pass
 				except:
-					exc_type, exc_value, exc_traceback = sys.exc_info()
-					tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-					tbOut = ''
-					n = 0
-					while n < len(tbObject):
-						tbOut = tbOut + tbObject[n] + '\n\n'
-						n = n + 1
-					send_message_to_chat('⚠️При перезапуске произошла ошибка, осуществляю принудительное выключение...\n\nДополнительная информация:\n- - -\n' + tbOut)
+					send_message_to_chat('⚠️При перезапуске произошла ошибка, осуществляю принудительное выключение...\n\nДополнительная информация:\n- - -\n' + getTraceback())
 					os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
 					pathRestart = pathMB.rstrip('mainBot.py') + 'startUp.ini'
 					os.remove(pathRestart)
@@ -637,9 +626,10 @@ def init_message_from_chat(message): #функция отвечающая за �
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
 			if mode == 1:
+				darkyIsTurnedOn = True
 				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
 			else:
-				pass
+				darkyIsTurnedOn = False
 			print('updating...')
 			send_message_to_chat('Обновляюсь, пожалуйста подождите...')
 			updateTimerBegin = time.time()
@@ -649,26 +639,36 @@ def init_message_from_chat(message): #функция отвечающая за �
 			try:
 				os.remove(pathDB)
 				wget.download(urlDB, pathDB)
+				print()
 			except:
 				send_message_to_chat('⚠️При обновлении "darkyBot.py" произошла ошибка')
 			print('updating "curVer.ini"...')
 			try:
 				os.remove(pathCV)
 				wget.download(urlCurVer, pathCV)
+				print()
 			except:
-				send_message_to_user('⚠️При обновлении "curVer.ini" произошла ошибка')
+				send_message_to_chat('⚠️При обновлении "curVer.ini" произошла ошибка')
 			print('updating "updHyst.ini"...')
 			try:
 				os.remove(pathUH)
 				wget.download(urlUpdHyst, pathUH)
+				print()
 			except:
 				send_message_to_chat('⚠️При обновлении "updHyst.ini" произошла ошибка')
 			print('updating "commandList.ini"...')
 			try:
 				os.remove(pathCL)
 				wget.download(urlCmdList, pathCL)
+				print()
 			except:
 				send_message_to_chat('⚠️При обновлении "commandList.ini" произошла ошибка')
+			try:
+				os.remove(pathVer)
+				wget.download(urlVer, pathVer)
+				print()
+			except:
+				send_message_to_chat('⚠️При обновлении "version.py" произошла ошибка')
 			send_message_to_chat('Перезапись путей к обновлённым файлам...')
 			darkyBotFileExist = 0
 			checkFileExist('*darkyBot.py', os.getcwd())
@@ -684,44 +684,46 @@ def init_message_from_chat(message): #функция отвечающая за �
 			checkFileExist('*commandList.ini', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathCL = neededFoundedFiles[0]
+			checkFileExist('*version.py', os.getcwd())
+			if len(neededFoundedFiles) > 0:
+				pathVer = neededFoundedFiles[0]
 			send_message_to_chat('Обновление завершено')
-			send_message_to_chat('Запускаюсь...')
-			try:
-				darkyBot = subprocess.Popen('python ' + pathDB, shell=True, preexec_fn=os.setsid)
-				darkyBotPID = darkyBot.pid
-				checkFileExist('*startUp.ini', os.getcwd())
-				if len(neededFoundedFiles) > 0:
-					pathSU = neededFoundedFiles[0]
+			if darkyIsTurnedOn == True:
+				send_message_to_chat('Запускаюсь...')
 				try:
-					os.remove(pathSU)
-				except:
-					pass
-				while darkyBotMode == 0 and not time.time() - updateTimerBegin > 120:
-					pathStartUp = pathMB.rstrip('mainBot.py') + 'startUp.ini'
+					darkyBot = subprocess.Popen('python ' + pathDB, shell=True, preexec_fn=os.setsid)
+					darkyBotPID = darkyBot.pid
+					checkFileExist('*startUp.ini', os.getcwd())
+					if len(neededFoundedFiles) > 0:
+						pathSU = neededFoundedFiles[0]
 					try:
-						with open(pathMB.rstrip('mainBot.py') + 'startUp.ini') as startUpCheck:
-							startUpCheck.close()
-						os.remove(pathStartUp)
-						darkyBotMode = 1
+						os.remove(pathSU)
 					except:
 						pass
-			except:
-				exc_type, exc_value, exc_traceback = sys.exc_info()
-				tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-				tbOut = ''
-				n = 0
-				while n < len(tbObject):
-					tbOut = tbOut + tbObject[n] + '\n\n'
-					n = n + 1
-				send_message_to_chat('⚠️Не удалось запустить скрипт "darkyBot.py"\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut)
-			if darkyBotMode == 1:
-				mode = 1
+					while darkyBotMode == 0 and not time.time() - updateTimerBegin > 120:
+						pathStartUp = pathMB.rstrip('mainBot.py') + 'startUp.ini'
+						try:
+							with open(pathMB.rstrip('mainBot.py') + 'startUp.ini') as startUpCheck:
+								startUpCheck.close()
+							os.remove(pathStartUp)
+							darkyBotMode = 1
+						except:
+							pass
+				except:
+					send_message_to_chat('⚠️Не удалось запустить скрипт "darkyBot.py"\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback())
+				if darkyBotMode == 1:
+					mode = 1
+					updateTimerEnd = time.time()
+					updateTime = updateTimerEnd - updateTimerBegin
+					updateTime = round(updateTime, 3)
+					send_message_to_chat('✅Я готова к работе\nПрошло: ' + str(updateTime) + ' сек.')
+				else:
+					send_message_to_chat('❌Скрипт "darkyBot.py" не запустился, возможно в нём произошла ошибка')
+			else:
 				updateTimerEnd = time.time()
 				updateTime = updateTimerEnd - updateTimerBegin
 				updateTime = round(updateTime, 3)
-				send_message_to_chat('✅Я готова к работе\nПрошло: ' + str(updateTime) + ' сек.')
-			else:
-				send_message_to_chat('❌Скрипт "darkyBot.py" не запустился, возможно в нём произошла ошибка')
+				send_message_to_chat('Прошло: ' + str(updateTime) + ' сек.')
 		else:
 			send_message_to_chat('⛔В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
 	elif message in diagnosticsCommand:
@@ -735,39 +737,55 @@ def init_message_from_chat(message): #функция отвечающая за �
 		auids = auids.split('-')
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if str(event.obj.message['from_id']) in auids:
+			if mode == 1:
+				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
+				mode = 0
 			diagnosticsTimer = time.time()
+			try:
+				os.remove(pathMB.rstrip('mainBot.py') + 'diagnosticsResult.ini')
+			except:
+				pass
 			send_message_to_chat('Диагностика запущена, пожалуйста подождите...')
 			diagnosticsLog = 'Файлы:\n'
+			diagnosticsRecomendations = 'Рекомендации:\n'
+			allFilesFounded = True
 			checkFileExist('*mainBot.py', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathMB = neededFoundedFiles[0]
 				diagnosticsLog += '✅mainBot.py - найден\n'
 			else:
 				diagnosticsLog += '⚠️mainBot.py - не найден\n'
+				allFilesFounded = False
 			checkFileExist('*darkyBot.py', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathDB = neededFoundedFiles[0]
 				diagnosticsLog += '✅darkyBot.py - найден\n'
 			else:
 				diagnosticsLog += '⚠️darkyBot.py - не найден\n'
+				allFilesFounded = False
 			checkFileExist('*adminUsers.ini', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathAU = neededFoundedFiles[0]
 				diagnosticsLog += '✅adminUsers.ini - найден\n'
 			else:
 				diagnosticsLog += '⚠️adminUsers.ini - не найден\n'
+				allFilesFounded = False
 			checkFileExist('*curVer.ini', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathCV = neededFoundedFiles[0]
 				diagnosticsLog += '✅curVer.ini - найден\n'
 			else:
 				diagnosticsLog += '⚠️curVer.ini - не найден\n'
+				allFilesFounded = False
 			checkFileExist('*updHyst.ini', os.getcwd())
 			if len(neededFoundedFiles) > 0:
 				pathUH = neededFoundedFiles[0]
 				diagnosticsLog += '✅updHyst.ini - найден\n'
 			else:
 				diagnosticsLog += '⚠️updHyst.ini - не найден\n'
+				allFilesFounded = False
+			if allFilesFounded == False:
+				diagnosticsRecomendations += '- Произведите восстановление файлов.\n'
 			importedScripts = False
 			try:
 				with open(pathMB.rstrip('mainBot.py') + 'diagnosticsStarted.ini', 'w') as diagnosticsMode:
@@ -776,7 +794,7 @@ def init_message_from_chat(message): #функция отвечающая за �
 				checkWork = False
 				checkWorkTimer = time.time()
 				diagnosticsStarts = 0
-				while checkWork == False and time.time() - checkWorkTimer < 30:
+				while checkWork == False and time.time() - checkWorkTimer < 300:
 					time.sleep(1)
 					try:
 						with open(pathMB.rstrip('mainBot.py') + 'diagnosticsResult.ini') as diagnosticsResult:
@@ -797,17 +815,10 @@ def init_message_from_chat(message): #функция отвечающая за �
 				else:
 					send_message_to_chat('⚠️Максимальный лимит времени исчерпан\nДиагностика завершена\n\nРезультат диагностики:\n\n' + diagnosticsLog + '\nПрошло: ' + str(round(time.time() - diagnosticsTimer, 3)) + 'сек.')
 			except:
-				exc_type, exc_value, exc_traceback = sys.exc_info()
-				tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-				tbOut = ''
-				n = 0
-				while n < len(tbObject):
-					tbOut = tbOut + tbObject[n] + '\n\n'
-					n = n + 1
-				send_message_to_chat('⚠️Не удалось запустить скрипт "darkyBot.py" в режиме диагностики\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut)
+				send_message_to_chat('⚠️Не удалось запустить скрипт "darkyBot.py" в режиме диагностики\nПричина: В скрипте произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback())
 		else:
 			send_message_to_chat('⛔В доступе отказано, свяжитесь с моим [darky_wings|создателем]')
-	elif message.startswith('Дарки, обнови главный скрипт') or message.startswith('Дарки обнови главный скрипт'):
+	elif message in updateMainScrtiptCommand:
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		checkFileExist('*adminUsers.ini', os.getcwd())
 		if not len(neededFoundedFiles) == 0:
@@ -822,6 +833,15 @@ def init_message_from_chat(message): #функция отвечающая за �
 				os.killpg(os.getpgid(darkyBotPID), signal.SIGTERM)
 			else:
 				pass
+			print('download "version.py"...')
+			try:
+				os.remove(pathVer)
+			except:
+				print('err')
+			try:
+				wget.download(urlVer, pathVer)
+			except:
+				print('err')
 			print('download "mainBot.py"...')
 			send_message_to_chat('Обновляю главный скрипт...')
 			try:
@@ -884,6 +904,19 @@ if len(neededFoundedFiles) > 0:
 	print(pathCL + ' - founded')
 else:
 	print('file "commandList.ini" not found!')
+checkFileExist('*version.py', os.getcwd())
+if len(neededFoundedFiles) > 0:
+	pathVer = neededFoundedFiles[0]
+	print(pathVer + ' - founded')
+else:
+	print('file "version.py" not found!')
+
+print('Получение информации о текущей версии...')
+try:
+	from version import versionName as currentVersion
+except FileNotFoundError:
+	wget.download(urlVer, pathMB.rstrip('mainBot.py') + 'version.py')
+	from version import versionName as currentVersion
 
 print('Всё готово(' + currentVersion + ')')
 while True:
@@ -899,14 +932,7 @@ while True:
 		print()
 		raise SystemExit
 	except:
-		exc_type, exc_value, exc_traceback = sys.exc_info()
-		tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-		tbOut = ''
-		c = 0
-		while c < len(tbObject):
-			tbOut = tbOut + tbObject[c] + '\n\n'
-			c = c + 1
-		vk.message.send(user_id = 507365405, random_id = get_random_id(), message = '⚠️Произошла ошибка\nМоя работа была приостановлена\n\nДополнительная информация:\n- - -\n' + tbOut)
+		vk.message.send(user_id = 507365405, random_id = get_random_id(), message = '⚠️Произошла ошибка\nМоя работа была приостановлена\n\nДополнительная информация:\n- - -\n' + getTraceback())
 		try:
 			input()
 		except:
