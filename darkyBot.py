@@ -1,5 +1,5 @@
 print('Инициализация текущей версии...')
-currentVersion = '3.0.1'
+from version import versionName as currentVersion
 
 print('Импорт модулей...')
 from vk_api.utils import get_random_id
@@ -84,12 +84,99 @@ checkMyWarns = ['Дарки, мои предупреждения', 'Дарки �
 updateGrAccssKeyCmd = ['Дарки, обнови приветствие', 'Дарки обнови приветствие', 'Дарки, обнови ключ доступа в приветствии', 'Дарки обнови ключ доступа в приветствии', '/darky_updateGrAccssKey']
 updateGrAccssKeysCmd = ['Дарки, обнови приветствия', 'Дарки обнови приветствия', 'Дарки, обнови ключи доступа в приветствиях', 'Дарки обнови ключи доступа в приветствиях', '/darky_updateGrAccssKeys']
 
+commandListPersMess = [
+'Доброе утро',
+'Спокойной ночи',
+'Дарки, помощь',
+'Дарки, помощь Дарки помощь',
+'Дарки, расскажи о себе',
+'Дарки, история обновлений',
+'Дарки, текущая версия',
+'Дарки, команды',
+'Дарки, выбери 1 или 2',
+'Дарки, вероятность ы',
+'Дарки, попытка ы',
+'Дарки, брось кубик',
+'Дарки, голос',
+'Дарки, сброс собранных данных',
+'Дарки, размер собранных данных',
+'Дарки, скажи ы',
+'Дарки, искази текст ы',
+'Дарки, не упоминай меня',
+'Дарки, упоминай меня',
+'Дарки, рандом от 9 до 1',
+'Дарки, рандом от 1 до 9',
+'Дарки, привет'
+]
+
+commandListChatMess = [
+'Дарки, создай рп команду ы',
+'Дарки, установи рп действие ы, ыкнул на-ыкнула на',
+'Дарки, перечисли рп команды',
+'Дарки, удали рп команду ы',
+'Дарки, позови всех',
+'Дарки, установи мой ник на глупышка',
+'Дарки, перечисли никнеймы',
+'Дарки, удали мой никнейм',
+'Доброе утро',
+'Спокойной ночи',
+'Дарки, помощь',
+'Дарки, помощь Дарки помощь',
+'Дарки, расскажи о себе',
+'Дарки, история обновлений',
+'Дарки, текущая версия',
+'Дарки, команды',
+'Дарки, выбери 1 или 2',
+'Дарки, вероятность ы',
+'Дарки, попытка ы',
+'Дарки, брось кубик',
+'Дарки, голос',
+'Дарки, сброс собранных данных',
+'Дарки, размер собранных данных',
+'Дарки, скажи ы',
+'Дарки, искази текст ы',
+'Дарки, не упоминай меня',
+'Дарки, упоминай меня',
+'Дарки, рандом от 9 до 1',
+'Дарки, рандом от 1 до 9',
+'Дарки, привет',
+'Дарки, управление рп командами',
+'Дарки, проверь свой статус',
+'Дарки, установи приветствие',
+'Дарки, текущее приветствие',
+'Дарки, удали приветствие',
+'Дарки, установи правила',
+'Дарки, правила',
+'Дарки, удали правила',
+'Дарки, кик',
+'Дарки, забань',
+'Дарки, разбань',
+'Дарки, список забаненных',
+'Дарки, варн',
+'Дарки, сними предупреждение',
+'Дарки, сними все предупреждения',
+'Дарки, сними у всех предупреждения',
+'Дарки, список заварненных',
+'Дарки, мои предупреждения',
+'Дарки, обнови ключ доступа в приветствии'
+]
+
 print('Загрузка функций...')
 
 os.chdir('/storage/sdcard0')
 
 neededFoundedFiles = []
 neededFoundedDirs = []
+
+def getTraceback(): #формирование трейсбека и отправка сообщением
+	exc_type, exc_value, exc_traceback = sys.exc_info()
+	tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
+	tbOut = ''
+	c = 0
+	while c < len(tbObject):
+		tbOut = tbOut + tbObject[c] + '\n\n'
+		c = c + 1
+	return tbOut
 
 def checkFilesExist(pattern, pathToFile): #поиск файла
 	global neededFoundedFiles
@@ -184,6 +271,18 @@ def rpFindUserFrom(chatMembers): #находит того кто использ�
 		rpFromUser = '[id' + str(event.obj.message['from_id']) + '|' + rpFromUserNickname + ']'
 	if mentPermission == 1 and foundedFromUserNick == 1:
 		rpFromUser = rpFromUserNickname
+
+def getInfoAboutRPCmd(allRPList, currRPIndex): #получение информации о рп команде (название, айди и тд.)
+	currentRPCommand = allRPList[currRPIndex].split('-')
+	currentRPName = currentRPCommand[0]
+	currentRPId = currentRPCommand[1]
+	if len(currentRPCommand) == 4:
+		currentRPMale = currentRPCommand[2]
+		currentRPFemale = currentRPCommand[3]
+	elif len(currentRPCommand) < 4:
+		currentRPMale = currentRPCommand[2]
+		currentRPFemale = currentRPCommand[2]
+	return currentRPCommand, currentRPName, currentRPId, currentRPMale, currentRPFemale
 		
 def rpFindRPCommand(message, chatMembers): #поиск указанной рп команды в базе данных
 	global rpAct
@@ -196,31 +295,78 @@ def rpFindRPCommand(message, chatMembers): #поиск указанной рп �
 	rpComm = message
 	replyMessage = 0
 	fwdMessage = 0
+	foundedRPs = 0
+	foundedRPsList = []
 	try:
 		with open(rpPath + '/' + str(rpId) + '.ini') as fileWithRpCmds:
 			allRP = fileWithRpCmds.read()
 			fileWithRpCmds.close()
 		allRPList = allRP.split('\n')
 		currRPIndex = 0
-		while currRPIndex < len(allRPList) - 1:
-			currentRPCommand = allRPList[currRPIndex].split('-')
-			currentRPName = currentRPCommand[0]
-			currentRPId = currentRPCommand[1]
-			currentRPMale = currentRPCommand[2]
-			currentRPFemale = currentRPCommand[3]
-			if message.lower().startswith(currentRPName + ' ') or message.lower().startswith('/rp ' + currentRPId + ' '):
-				rpFounded = 1
-				break
-			elif message.lower() == currentRPName and not event.obj.message['fwd_messages'] == [] or message.lower() == '/rp ' + currentRPId and not event.obj.message['fwd_messages'] == []:
-				rpFounded = 1
-				fwdMessage = 1
-				break
-			elif message.lower() == currentRPName and not event.obj.message['reply_message']['from_id'] == 0 or message.lower() == '/rp ' + currentRPId and not event.obj.message['reply_message']['from_id'] == 0:
-				rpFounded = 1
+		try: #определение типа сообщений
+			if not event.obj.message['reply_message']['from_id'] == 0:
 				replyMessage = 1
-				break
-			else:
-				currRPIndex = currRPIndex + 1
+				currRPIndex = 0
+				while currRPIndex < len(allRPList) - 1:
+					currentRPCommand, currentRPName, currentRPId, currentRPMale, currentRPFemale = getInfoAboutRPCmd(allRPList, currRPIndex)
+					if message.lower() == currentRPName or message.lower() == '/rp ' + currentRPId:
+						rpFounded = 1
+						break
+					else:
+						currRPIndex += 1
+		except:
+			try:
+				if not event.obj.message['fwd_messages'] == []:
+					fwdMessage = 1
+					currRPIndex = 0
+					while currRPIndex < len(allRPList) - 1:
+						currentRPCommand, currentRPName, currentRPId, currentRPMale, currentRPFemale = getInfoAboutRPCmd(allRPList, currRPIndex)
+						if message.lower() == currentRPName or message.lower() == '/rp ' + currentRPId:
+							rpFounded = 1
+							break
+						else:
+							currRPIndex += 1
+			except:
+				pass
+		if rpFounded == 0:
+			currRPIndex = 0
+			while currRPIndex < len(allRPList) - 1:
+				currentRPCommand, currentRPName, currentRPId, currentRPMale, currentRPFemale = getInfoAboutRPCmd(allRPList, currRPIndex)
+				if message.lower().startswith(currentRPName + ' ') or message.lower().startswith('/rp ' + currentRPId + ' '):
+					foundedRPs += 1
+					foundedRPsList.append(allRPList[currRPIndex])
+				currRPIndex += 1
+			if foundedRPs == 1: #схожих команд было не более 1 - использование нужной команды
+				rpFounded = 1
+				currentRPCommand, currentRPName, currentRPId, currentRPMale, currentRPFemale = getInfoAboutRPCmd(foundedRPsList, 0)
+			elif foundedRPs > 1: #иначе производятся повторные поиски команд пока совпадений не будет менее 2-ух.
+				currRPIndex = 0
+				addWordToRp = 1
+				currentRPCmd = message.lower().split(' ')[0] + ' ' + message.lower().split(' ')[1] + ' '
+				wordsInCurrRP = len(currentRPCmd.split(' ')) - 1
+				while foundedRPs > 1: #пока эта переменная не будет меньше 2-ух - цикл будет продолжаться
+					currRPIndex = 0
+					foundedRPs = 0
+					while currRPIndex < len(foundedRPsList):
+						currentRPCommand, currentRPName, currentRPId, currentRPMale, currentRPFemale = getInfoAboutRPCmd(foundedRPsList, currRPIndex)
+						if len(currentRPName.split(' ')) >= wordsInCurrRP:
+							if currentRPCmd.startswith(currentRPName + ' '):
+								foundedRPs += 1
+								currRPIndex += 1
+							elif not currentRPCmd.startswith(currentRPName + ' ') and wordsInCurrRP < len(currentRPName.split(' ')):
+								foundedRPs += 1
+								currRPIndex += 1
+							else: #если начало команды не совпадает- удаление его из списка
+								del foundedRPsList[currRPIndex]
+						else: #если в команде из списка меньше слов чем в сообщении - удаление данной команды из списка
+							del foundedRPsList[currRPIndex]
+					if foundedRPs == 1:
+						rpFounded = 1
+						currentRPCommand, currentRPName, currentRPId, currentRPMale, currentRPFemale = getInfoAboutRPCmd(foundedRPsList, 0)
+						break
+					else: #если обнаружено совпадений больше чем 1 - добавление слов в команду и повторный поиск
+						addWordToRp += 1
+						currentRPCmd += message.lower().split(' ')[addWordToRp] + ' '
 		if rpFounded == 1:
 			fromUserIndex = 0
 			while not chatMembers['profiles'][fromUserIndex]['id'] == event.obj.message['from_id']:
@@ -232,7 +378,7 @@ def rpFindRPCommand(message, chatMembers): #поиск указанной рп �
 				rpAct = currentRPFemale.lower()
 			if message.lower().startswith(currentRPName + ' ') and replyMessage == 0 and fwdMessage == 0:
 				rpTo = message
-				rpName = currentRPName.split(' ')
+				rpName = list(currentRPName)
 				w = 0
 				while w < len(rpName):
 					rpTo = rpTo.lstrip(rpName[w]).lstrip(rpName[w].upper()).lstrip(' ')
@@ -380,11 +526,11 @@ def init_message_from_user(message, id): #определение команды 
 	if "Дурки" in message or "боты тупые" in message.lower() or "боты не имеют мозгов" in message.lower():
 		print('id:', event.obj.message['from_id'], ':', message)
 		send_message_to_user('Обидно ;с', id)
-	elif "Доброе утро" in message or "доброе утро" in message or "Добре" in message or "добре" in message or "Утра" in message or "утра" in message or "Утречка" in message or "утречка" in message or "Утрешка" in message or "утрешка" in message:
+	elif "доброе утро" in message.lower() or "утра" in message.lower() or "добре" in message.lower() or "доброе" in message.lower():
 		print('id:', event.obj.message['from_id'], ':', message)
 		goodMorningMessage = ['Доброе', 'Утра', 'Доброе утро', 'Привет', 'Преть']
 		send_message_to_user(random.choice(goodMorningMessage), id)
-	elif "Спокойной ночи" in message or "спокойной ночи" in message or "споки" in message or "Споки" in message or "споке" in message or "Споке" in message:
+	elif "спокойной ночи" in message.lower() or "споки" in message.lower() or "споке" in message.lower():
 		print('id:', event.obj.message['from_id'], ':', message)
 		sleepMessage = ['Споки', 'Добрых снов', 'Спокойной', 'Спокойной ночи', 'Ночки', 'Сладких снов']
 		sleepRand = random.randint(0, len(sleepMessage))
@@ -622,13 +768,13 @@ def init_message_from_user(message, id): #определение команды 
 		grammaticRand = random.randint(0, 10)
 		if grammaticRand == 0:
 			outMess = outMess.capitalize()
-		if grammaticRand == 1:
+		elif grammaticRand == 1:
 			outMess = outMess.upper()
-		if grammaticRand == 2:
+		elif grammaticRand == 2:
 			outMess = outMess.lower()
 		if len(wordList) > 19:
 			send_message_to_user(outMess, id)
-		if len(wordList) < 20:
+		elif len(wordList) < 20:
 			send_message_to_user('⚠️Я пока что собрала недостаточно данных для более менее хорошей генерации своих сообщений, дайте мне изучить беседу подольше и я обещаю, что смогу сгенерировать что-нибудь, хоть и не очень умное', id)
 		i = 0
 		outMess = ''
@@ -687,14 +833,7 @@ def init_message_from_user(message, id): #определение команды 
 			else:
 				send_message_to_user('Я уже снизила ваше упоминание в моих сообщениях до минимума', id)
 		except:
-			exc_type, exc_value, exc_traceback = sys.exc_info()
-			tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-			tbOut = ''
-			c = 0
-			while c < len(tbObject):
-				tbOut = tbOut + tbObject[c] + '\n\n'
-				c = c + 1
-			send_message_to_user('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut, id)
+			send_message_to_user('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback(), id)
 	elif message in mentionOn:
 		print('id:', event.obj.message['from_id'], ':', message)
 		try:
@@ -724,14 +863,7 @@ def init_message_from_user(message, id): #определение команды 
 			else:
 				send_message_to_user('❌Я не могу начать вас упоминать если у вас итак включены упоминания от меня', id)
 		except:
-			exc_type, exc_value, exc_traceback = sys.exc_info()
-			tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-			tbOut = ''
-			c = 0
-			while c < len(tbObject):
-				tbOut = tbOut + tbObject[c] + '\n\n'
-				c = c + 1
-			send_message_to_user('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut, id)
+			send_message_to_user('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback(), id)
 	elif message.startswith('Дарки, рандом') or message.startswith('Дарки рандом') or message.startswith('/darky_random'):
 		print('id:', event.obj.message['from_id'], ':', message)
 		if message.startswith('Дарки'):
@@ -753,8 +885,6 @@ def init_message_from_user(message, id): #определение команды 
 			hiMessage = ['Преть', 'Привет']
 			hiRand = random.randint(1, len(hiMessage))
 			send_message_to_user(hiMessage[hiRand - 1], id)
-	elif "Дарки" in message:
-		send_message_to_user('Я к вашим услугам', id)
 
 def init_message_from_chat(message, id): #определение команды из беседы
 	global i
@@ -815,7 +945,7 @@ def init_message_from_chat(message, id): #определение команды 
 			send_message_to_chat(out, id)
 		else:
 			send_message_to_chat('⚠️Выполнение этой команды невозможно, пока у меня нет статуса администратора.', id)
-	elif message.startswith('Дарки, создай рп команду') or message.startswith('Дарки создай рп команду') or message.startswith('/darky_create_rpCommand='):
+	elif message.capitalize().startswith('Дарки, создай рп команду') or message.capitalize().startswith('Дарки создай рп команду') or message.startswith('/darky_create_rpCommand='):
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if adminStatus == 1:
 			with open(pathAU, 'r') as adminUsersIds:
@@ -834,6 +964,7 @@ def init_message_from_chat(message, id): #определение команды 
 				curRPCommand = 0
 				createdRPCommand = 0
 				if message.startswith('Дарки'):
+					message = message.capitalize()
 					if message.startswith('Дарки, создай'):
 						rpNew = message.lstrip('Дарки, ')
 					if message.startswith('Дарки создай'):
@@ -843,7 +974,7 @@ def init_message_from_chat(message, id): #определение команды 
 					rpNew = message.lstrip('/darky_create_rpCommand').lstrip('=')
 				rpNew = rpNew.lstrip(' ')
 				rpNew = rpNew.lower()
-				if not rpNew == '':
+				if not rpNew == '' and len(rpNew.split(' ')) < 5:
 					try:
 						with open(rpPath + '/' + str(rpId) + '.ini', 'a') as rpChatCheck: #проверка на наличие файла с командами
 							rpChatCheck.close()
@@ -852,7 +983,7 @@ def init_message_from_chat(message, id): #определение команды 
 							rpChatCheck.close()
 					try:
 						with open(rpPath + '/' + str(rpId) + '.ini') as rpCreateCheck: #проверка существует ли данная команда
-							allRPCommands = rpCreateCheck.read().split()
+							allRPCommands = rpCreateCheck.read().split('\n')
 							linesRPCreate = len(allRPCommands)
 							rpCreateCheck.close()
 						while not curRPCommand > linesRPCreate:
@@ -869,10 +1000,10 @@ def init_message_from_chat(message, id): #определение команды 
 						try:
 							with open(rpPath + '/' + str(rpId) + '.ini', 'r') as rpNewComm:
 								rpNewBackup = rpNewComm.read()
-								linesNewRP = len(rpNewComm.read().split())
+								linesNewRP = len(rpNewBackup.split('\n')) - 1
 								rpNewComm.close()
 							with open(rpPath + '/' + str(rpId) + '.ini', 'a') as rpNewComm:
-								if linesNewRP > 1:
+								if linesNewRP < 0:
 									lastRPCommandId = allRPCommands[linesRPCreate - 1]
 									lastRPCommandId = lastRPCommandId.split('-')
 									lastRPCommandId = lastRPCommandId[1]
@@ -894,16 +1025,25 @@ def init_message_from_chat(message, id): #определение команды 
 									rpNewComm.close()
 							except:
 								send_message_to_chat('❗При восстановлении сохранённых команд произошла ошибка. Возможно все созданные в этой беседе команды - сбросились.\nПрошу прощения..', id)
-							send_message_to_chat('❌Не удалось создать команду', id)
+							exc_type, exc_value, exc_traceback = sys.exc_info()
+							tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
+							tbOut = ''
+							c = 0
+							while c < len(tbObject):
+								tbOut = tbOut + tbObject[c] + '\n\n'
+								c = c + 1
+							send_message_to_chat('❌Не удалось создать команду\n- - -\nДополнительная информация:\n\n' + tbOut, id)
 					else:
 						send_message_to_chat('⚠️Такая команда уже существует', id)
+				elif len(rpNew.split(' ')) > 4:
+					send_message_to_chat('⚠️Ограничение: в данной команде содержится больше 4-х слов', id)
 				else:
 					send_message_to_chat('⚠️Невозможно создать команду с пустым названием', id)
 			else:
 				send_message_to_chat('⛔В доступе отказано.\nВы не являетесь администратором', id)
 		else:
 			send_message_to_chat('⚠️Выполнение этой команды невозможно, пока у меня нет статуса администратора.', id)
-	elif message.startswith('Дарки, удали рп команду') or message.startswith('Дарки удали рп команду') or message.startswith('/darky_delete_rpCommand='):
+	elif message.capitalize().startswith('Дарки, удали рп команду') or message.capitalize().startswith('Дарки удали рп команду') or message.startswith('/darky_delete_rpCommand='):
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if adminStatus == 1:
 			with open(pathAU, 'r') as adminUsersIds:
@@ -923,6 +1063,7 @@ def init_message_from_chat(message, id): #определение команды 
 				curDelRPLine = 0
 				rpDelResult = ''
 				if message.startswith('Дарки'):
+					message = message.capitalize()
 					if message.startswith('Дарки, удали'):
 						rpDel = message.lstrip('Дарки, ')
 					if message.startswith('Дарки удали'):
@@ -970,7 +1111,7 @@ def init_message_from_chat(message, id): #определение команды 
 				send_message_to_chat('⛔В доступе отказано.\nВы не являетесь администратором', id)
 		else:
 			send_message_to_chat('⚠️Выполнение этой команды невозможно, пока у меня нет статуса администратора.', id)
-	elif message.startswith('Дарки, установи рп действие') or message.startswith('Дарки установи рп действие') or message.startswith('/darky_set_rpAction='):
+	elif message.capitalize().startswith('Дарки, установи рп действие') or message.capitalize().startswith('Дарки установи рп действие') or message.startswith('/darky_set_rpAction='):
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if adminStatus == 1:
 			with open(pathAU, 'r') as adminUsersIds:
@@ -990,6 +1131,7 @@ def init_message_from_chat(message, id): #определение команды 
 				setActionDone = 0
 				rpActionResult = ''
 				if message.startswith('Дарки'):
+					message = message.capitize()
 					if message.startswith('Дарки, установи'):
 						rpAction = message.lstrip('Дарки, ')
 					if message.startswith('Дарки установи'):
@@ -1315,11 +1457,11 @@ def init_message_from_chat(message, id): #определение команды 
 	elif "Дурки" in message or "боты тупые" in message.lower() or "боты не имеют мозгов" in message.lower():
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		send_message_to_chat('Обидно ;с', id)
-	elif "Доброе утро" in message or "доброе утро" in message or "Добре" in message or "добре" in message or "Утра" in message or "утра" in message or "Утречка" in message or "утречка" in message or "Утрешка" in message or "утрешка" in message:
+	elif "доброе утро" in message.lower() or "утра" in message.lower() or "добре" in message.lower() or "доброе" in message.lower():
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		goodMorningMessage = ['Доброе', 'Утра', 'Доброе утро', 'Привет', 'Преть']
 		send_message_to_chat(random.choice(goodMorningMessage), id)
-	elif "Спокойной ночи" in message or "спокойной ночи" in message or "споки" in message or "Споки" in message or "споке" in message or "Споке" in message:
+	elif "спокойной ночи" in message.lower() or "споки" in message.lower() or "споке" in message.lower():
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		sleepMessage = ['Споки', 'Добрых снов', 'Спокойной', 'Спокойной ночи', 'Ночки', 'Сладких снов']
 		sleepRand = random.randint(0, len(sleepMessage))
@@ -1583,7 +1725,7 @@ def init_message_from_chat(message, id): #определение команды 
 				except:
 					try:
 						replyMess = 0
-						warnedUser = event.obj.message['fwd_messages'][0]['from_id']
+						bannedUser = event.obj.message['fwd_messages'][0]['from_id']
 						fwdMess = 1
 					except:
 						pass
@@ -1594,9 +1736,14 @@ def init_message_from_chat(message, id): #определение команды 
 							allUsers = vk.messages.getConversationMembers(peer_id = 2000000000 + event.chat_id)
 							d = 0
 							while d < len(allUsers):
-								if allUsers['items'][d]['member_id'] == bannedUser and allUsers['items'][accssRP]['is_admin'] == True:
-									userAdmin = True
-									break
+								if allUsers['items'][d]['member_id'] == bannedUser:
+									try:
+										if allUsers['items'][accssRP]['is_admin'] == True:
+											userAdmin = True
+											break
+									except:
+										userAdmin = False
+										break
 								else:
 									d = d + 1
 						except:
@@ -1671,7 +1818,7 @@ def init_message_from_chat(message, id): #определение команды 
 				except:
 					try:
 						replyMess = 0
-						warnedUser = event.obj.message['fwd_messages'][0]['from_id']
+						bannedUser = event.obj.message['fwd_messages'][0]['from_id']
 						fwdMess = 1
 					except:
 						pass
@@ -1814,17 +1961,14 @@ def init_message_from_chat(message, id): #определение команды 
 						warnGet = False
 						curWarnCount = 0
 						while w < len(warnedList) - 1:
-							print(str(warnedUser), warnedList[w].split('||')[0])
 							if str(warnedUser) == warnedList[w].split('||')[0]:
 								curWarnCount = int(warnedList[w].split('||')[1])
 								warnGet = True
 								break
 							else:
-								print('false')
 								w += 1
 					except:
 						curWarnCount = 0
-					print(curWarnCount)
 					if userAdmin == False:
 						if warnGet == True and curWarnCount < 4:
 							curWarnCount += 1
@@ -2302,13 +2446,13 @@ def init_message_from_chat(message, id): #определение команды 
 		grammaticRand = random.randint(0, 10)
 		if grammaticRand == 0:
 			outMess = outMess.capitalize()
-		if grammaticRand == 1:
+		elif grammaticRand == 1:
 			outMess = outMess.upper()
-		if grammaticRand == 2:
+		elif grammaticRand == 2:
 			outMess = outMess.lower()
 		if len(wordList) > 19:
 			send_message_to_chat(outMess, id)
-		if len(wordList) < 20:
+		elif len(wordList) < 20:
 			send_message_to_chat('⚠️Я пока что собрала недостаточно данных для более менее хорошей генерации своих сообщений, дайте мне изучить беседу подольше и я обещаю, что смогу сгенерировать что-нибудь', id)
 		i = 0
 		outMess = ''
@@ -2379,14 +2523,7 @@ def init_message_from_chat(message, id): #определение команды 
 			else:
 				send_message_to_chat('Я уже снизила ваше упоминание в моих сообщениях до минимума', id)
 		except:
-			exc_type, exc_value, exc_traceback = sys.exc_info()
-			tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-			tbOut = ''
-			c = 0
-			while c < len(tbObject):
-				tbOut = tbOut + tbObject[c] + '\n\n'
-				c = c + 1
-			send_message_to_chat('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut, id)
+			send_message_to_chat('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback(), event.chat_id)
 	elif message in mentionOn:
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		try:
@@ -2416,14 +2553,7 @@ def init_message_from_chat(message, id): #определение команды 
 			else:
 				send_message_to_chat('❌Я не могу начать вас упоминать если у вас итак включены упоминания от меня', id)
 		except:
-			exc_type, exc_value, exc_traceback = sys.exc_info()
-			tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-			tbOut = ''
-			c = 0
-			while c < len(tbObject):
-				tbOut = tbOut + tbObject[c] + '\n\n'
-				c = c + 1
-			send_message_to_chat('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + tbOut, id)
+			send_message_to_chat('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback(), event.chat_id)
 	elif message in setNewGreetings:
 		print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], ':', message)
 		if adminStatus == 1:
@@ -2565,14 +2695,7 @@ def init_message_from_chat(message, id): #определение команды 
 						elif updatedGreeting == '':
 							send_message_to_chat('⚠️Прикреплённый в вашем приветствии объект похоже был отправлен мне очень давно и я не смогла его найти. Пожалуйста установите приветствие заново во избежание его некорректной работы', id)
 					except:
-						exc_type, exc_value, exc_traceback = sys.exc_info()
-						tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-						tbOut = ''
-						c = 0
-						while c < len(tbObject):
-							tbOut = tbOut + tbObject[c] + '\n\n'
-							c = c + 1
-						send_message_to_chat('⚠️Произошла ошибка на этом этапе данной команды: ' + currentStep + '\n\nДополнительная информация:\n- - -\n' + tbOut, id)
+						send_message_to_chat('⚠️Произошла ошибка на этом этапе жанной комарды: ' + currentStep + '\n\nДополнительная информация:\n- - -\n' + getTraceback(), event.chat_id)
 				else:
 					send_message_to_chat('⚠️В вашей беседе нет установленного приветствия', id)
 			else:
@@ -2641,14 +2764,7 @@ def init_message_from_chat(message, id): #определение команды 
 							elif updatedGreeting == '':
 								send_message_to_chat('⚠️Обнаружена некорректная работа вашего приветствия, настоятельно рекомендую установить его заново', greetingList[i].rstrip('.ini'))
 						except:
-							exc_type, exc_value, exc_traceback = sys.exc_info()
-							tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-							tbOut = ''
-							c = 0
-							while c < len(tbObject):
-								tbOut = tbOut + tbObject[c] + '\n\n'
-								c = c + 1
-							send_message_to_chat('⚠️Произошла ошибка на этом этапе данной команды: ' + currentStep + '\n\nДополнительная информация:\n- - -\n' + tbOut, id)
+							send_message_to_chat('⚠️Произошла ошибка на этом этапе данной команды: ' + currentStep + '\n\nДополнительная информация:\n- - -\n' + getTraceback(), event.chat_id)
 						i += 1
 					if updateGreetingsResult != '':
 						send_message_to_chat(updateGreetingsResult, id)
@@ -2810,14 +2926,7 @@ def updateAccssKeysInGreetings():
 				elif updatedGreeting == '':
 					send_message_to_chat('⚠️Обнаружена некорректная работа вашего приветствия, настоятельно рекомендую установить его заново', greetingList[i].rstrip('.ini'))
 			except:
-				exc_type, exc_value, exc_traceback = sys.exc_info()
-				tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-				tbOut = ''
-				c = 0
-				while c < len(tbObject):
-					tbOut = tbOut + tbObject[c] + '\n\n'
-					c = c + 1
-				send_message_to_user('⚠️Произошла ошибка на этом этапе обновления ключей доступа: ' + currentStep + '\n\nДополнительная информация:\n- - -\n' + tbOut, 507365405)
+				send_message_to_chat('⚠️Произошла ошибка на этом этапе обновления ключей доступа: ' + currentStep + '\n\nДополнительная информация:\n- - -\n' + getTraceback(), 507365405)
 			i += 1
 		if updateGreetingsResult != '':
 			send_message_to_user(updateGreetingsResult, 507365405)
@@ -2827,7 +2936,48 @@ def updateAccssKeysInGreetings():
 		send_message_to_user('⚠️Папка с приветствиями отсутствует', 507365405)
 
 def diagnosticsScript():
+	global adminStatus
+	global rpId
 	diagnosticsLog = ''
+	diagnosticsLogPers = ''
+	diagnosticsLogChat = ''
+	event.obj.message['from_id'] = 270488028
+	event.obj.message['fwd_messages'][0]['from_id'] = 270488028
+	event.obj.message['fwd_messages'][0]['text'] = 'ыыы'
+	print('Проверка личных сообщений...')
+	i = 0
+	while i < len(commandListPersMess):
+		event.obj.message['text'] = commandListPersMess[i]
+		try:
+			init_message_from_user(commandListPersMess[i], 270488028)
+		except:
+			diagnosticsLogPers += '⚠️[ЛС]' + commandListPersMess[i] + ' - Может вывести из строя\n' + getTraceback()
+		i += 1
+	if diagnosticsLogPers == '':
+		diagnosticsLog += '✅[ЛС] Проблем не обнаружено\n'
+	else:
+		diagnosticsLog += diagnosticsLogPers
+	print('Проверка чатов...')
+	rpId = 7
+	event.chat_id = 7
+	i = 0
+	while i < len(commandListChatMess):
+		event.obj.message['text'] = commandListChatMess[i]
+		try:
+			adminStatus = 0
+			try:
+				adminCheck = vk.messages.getConversationMembers(peer_id = 2000000000 + event.chat_id)
+				adminStatus = 1
+			except:
+				pass
+			init_message_from_chat(commandListChatMess[i], 7)
+		except:
+			diagnosticsLogChat += '⚠️[Беседы]' + commandListChatMess[i] + ' - Может вывести из строя\n' + getTraceback()
+		i += 1
+	if diagnosticsLogChat == '':
+		diagnosticsLog += '✅[Беседы] Проблем не обнаружено\n'
+	else:
+		diagnosticsLog += diagnosticsLogChat
 	print('Диагностика скрипта завершена, запись лога в файл...')
 	with open(mainPathDB + 'diagnosticsResult.ini', 'w') as diagResult:
 		diagResult.write(diagnosticsLog)
@@ -2990,6 +3140,7 @@ while True:
 	try:
 		for event in botlongpoll.listen(): #своеобразное прослушивание новых событий
 			adminStatus = 0
+			#print(event)
 			userIsBanned = False
 			randGrAKUpd = random.randint(0, 20)
 			if randGrAKUpd == 1:
@@ -3014,20 +3165,45 @@ while True:
 			try:
 				if event.obj.message['action']['type'] == 'chat_invite_user' and event.obj.message['action']['member_id'] == -192784148:
 					print('chat:', event.chat_id, 'id:', event.obj.message['from_id'], '<bot added to chat>')
-					send_message_to_chat_att('Спасибо за добавление в беседу\n\nЯ постараюсь быть максимально послушной не смотря на мои недоработки. Если вы нашли недоработку или ошибку в моей работе - сообщите моему [id507365405|создателю], написав ему в личные сообщения.\n\nЧтобы узнать мои команды - введите "Дарки, команды"\nДля вызова помощи - "Дарки, помощь".\n\nТакже я обнаружила, что пока не имею статус администратора, поэтому советую выдать мне его для успешной работы некоторых моих команд.\n\nВыдать мне администратора можно как с компьютера, так и с телефона, если вы с компьютера просто следуйте картинкам ниже, а если вы с телефона то выполните пункты ниже:\n1. Зайдите в вк через браузер.\n2. Активируйте версию для компьютера\n3. Также следуйте картинкам ниже.', event.chat_id, 'photo192784148_457239027,photo192784148_457239028,photo192784148_457239029')
+					send_message_to_chat_att('Спасибо за добавление в беседу\n\nЯ постараюсь быть максимально послушной не смотря на мои недоработки. Если вы нашли недоработку или ошибку в моей работе - сообщите моему [id507365405|создателю], написав ему в личные сообщения.\n\nЧтобы узнать мои команды - введите "Дарки, команды"\nДля вызова помощи - "Дарки, помощь".\n\nТакже я обнаружила, что пока не имею статус администратора, поэтому советую выдать мне его для успешной работы некоторых моих команд.\n\nВыдать мне администратора можно как с компьютера, так и с телефона, если вы с компьютера просто следуйте картинкам ниже, а если вы с телефона то выполните пункты ниже:\n1. Зайдите в вк через браузер.\n2. Активируйте версию для компьютера\n3. Также следуйте картинкам ниже.', event.chat_id, 'photo-192784148_457239027,photo-192784148_457239028,photo-192784148_457239029')
 				elif event.obj.message['action']['type'] == 'chat_invite_user' and event.obj.message['action']['member_id'] < 0:
 					replics = ['Зачем тут ещё один бот? ;·', 'Я наверняка лучше', 'Зачем тут ещё один бот? Я вам не нужна?', 'Мой функционал наверняка больше']
 					send_message_to_chat(random.choice(replics), event.chat_id)
 			except:
 				pass
 			try: #приветствие при новом пользователе
-				if event.obj.message['action']['type'] == 'chat_invite_user' and event.obj.message['action']['member_id'] > 0 and userIsBanned == False or event.obj.message['action']['type'] == 'chat_invite_user_by_link' and event.obj.message['action']['member_id'] > 0 and userIsBanned == False:
+				if event.obj.message['action']['type'] == 'chat_invite_user' and event.obj.message['action']['member_id'] > 0 and userIsBanned == False or event.obj.message['action']['type'] == 'chat_invite_user_by_link' and event.obj.message['from_id'] > 0 and userIsBanned == False:
 					with open(greetingsPath + '/' + str(event.chat_id) + '.ini') as greetingToChat:
 						greeting = greetingToChat.read()
 						greetingToChat.close()
 					greetingText = greeting.split('||')[0]
 					greetingAttachment = greeting.split('||')[1]
-					send_message_to_chat_att(greetingText, event.chat_id, greetingAttachment)
+					try:
+						mentPermission = 0
+						with open(mainPathDB + 'usersMentionOff.ini') as checkMentionPerm:
+							mentionPermission = checkMentionPerm.read()
+							checkMentionPerm.close()
+						mentionPermission = mentionPermission.split('_')
+						curUserCheckMentPerm = 0
+						while curUserCheckMentPerm < len(mentionPermission):
+							curCheckMentPerm = mentionPermission[curUserCheckMentPerm]
+							if curCheckMentPerm == str(event.obj.message['action']['member_id']):
+								mentPermission = 1
+							else:
+								pass
+							curUserCheckMentPerm = curUserCheckMentPerm + 1
+					except:
+						mentPermission = 0
+					try:
+						userInfo = vk.users.get(user_ids = event.obj.message['action']['member_id'])
+						newUserFirstName = userInfo[0]['first_name']
+					except:
+						send_message_to_chat('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback(), event.chat_id)
+					if mentPermission == 0:
+						greetingMention = '[id' + str(event.obj.message['action']['member_id']) + '|' + newUserFirstName + ',]\n'
+					else:
+						greetingMention = newUserFirstName + ',\n'
+					send_message_to_chat_att(greetingMention + greetingText, event.chat_id, greetingAttachment)
 				elif userIsBanned == True:
 					bannedUser = event.obj.message['action']['member_id']
 					try: # попытка кикнуть пользователя если он ещё в беседе
@@ -3083,14 +3259,7 @@ while True:
 		print()
 		raise SystemExit
 	except:
-		exc_type, exc_value, exc_traceback = sys.exc_info()
-		tbObject = traceback.format_exception(exc_type, exc_value, exc_traceback, limit = 5)
-		tbOut = ''
-		c = 0
-		while c < len(tbObject):
-			tbOut = tbOut + tbObject[c] + '\n\n'
-			c = c + 1
-		send_message_to_user('⚠️Произошла ошибка\nМоя работа была приостановлена\n\nДополнительная информация:\n- - -\n' + tbOut, 507365405)
+		send_message_to_user('⚠️Произошла ошибка\nМоя работа была приостановлена\n\nДополнительная информация:\n- - -\n' + getTraceback(), 507365405)
 		try:
 			input()
 		except:
