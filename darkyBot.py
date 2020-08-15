@@ -3247,13 +3247,20 @@ while True:
 						messWrite.write(' ' + messageText)
 						messWrite.close()
 				init_message_from_user(event.obj.message['text'], event.obj.message['from_id'])
-	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout, requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
+	except (TimeoutError, requests.exceptions.Timeout, requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
 		randGrAKUpd = random.randint(0, 20)
 		if randGrAKUpd == 1:
 			print('Обновление ключей доступа в приветствиях...')
 			updateAccssKeysInGreetings()
 			print('Готово')
 		else:
+			pass
+	except requests.exceptions.ConnectionError:
+		print('Ожидание подключения...')
+		time.sleep(5)
+		try:
+			send_message_to_user('✅Переподключение сети прошло успешно', 507365405)
+		except:
 			pass
 	except KeyboardInterrupt:
 		print()
