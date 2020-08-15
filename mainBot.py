@@ -926,8 +926,10 @@ while True:
 				init_message_from_user(event.obj.message['text'])
 			elif event.type == VkBotEventType.MESSAGE_NEW and event.from_chat:
 				init_message_from_chat(event.obj.message['text'])
-	except (requests.exceptions.ConnectionError, TimeoutError, requests.exceptions.Timeout, requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
+	except (TimeoutError, requests.exceptions.Timeout, requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
 		pass
+	except requests.exceptions.ConnectionError:
+		time.sleep(5)
 	except KeyboardInterrupt:
 		print()
 		raise SystemExit
