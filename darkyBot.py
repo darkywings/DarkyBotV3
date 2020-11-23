@@ -3198,7 +3198,11 @@ while True:
 						userInfo = vk.users.get(user_ids = event.obj.message['action']['member_id'])
 						newUserFirstName = userInfo[0]['first_name']
 					except:
-						send_message_to_chat('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback(), event.chat_id)
+						try:
+							userInfo = vk.users.get(user_ids = event.obj.message['from_id'])
+							newUserFirstName = userInfo[0]['first_name']
+						except:
+							send_message_to_chat('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback(), event.chat_id)
 					if mentPermission == 0:
 						greetingMention = '[id' + str(event.obj.message['action']['member_id']) + '|' + newUserFirstName + ',]\n'
 					else:
