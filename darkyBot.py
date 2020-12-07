@@ -3204,7 +3204,10 @@ while True:
 						except:
 							send_message_to_chat('⚠️Произошла ошибка\n\nДополнительная информация:\n- - -\n' + getTraceback(), event.chat_id)
 					if mentPermission == 0:
-						greetingMention = '[id' + str(event.obj.message['action']['member_id']) + '|' + newUserFirstName + ',]\n'
+						try:
+							greetingMention = '[id' + str(event.obj.message['action']['member_id']) + '|' + newUserFirstName + ',]\n'
+						except:
+							greetingMention = '[id' + str(event.obj.message['from_id']) + '|' + newUserFirstName + ',]\n'
 					else:
 						greetingMention = newUserFirstName + ',\n'
 					send_message_to_chat_att(greetingMention + greetingText, event.chat_id, greetingAttachment)
