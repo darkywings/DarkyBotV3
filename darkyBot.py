@@ -1131,7 +1131,7 @@ def init_message_from_chat(message, id): #определение команды 
 				setActionDone = 0
 				rpActionResult = ''
 				if message.startswith('Дарки'):
-					message = message.capitize()
+					message = message.capitalize()
 					if message.startswith('Дарки, установи'):
 						rpAction = message.lstrip('Дарки, ')
 					if message.startswith('Дарки установи'):
